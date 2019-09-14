@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>权限管理</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/bootstrap-table.css" />
+<link rel="stylesheet" href="css/bootstrap-select.min.css" />
+
+<!-- Custom CSS -->
+<link href="css/sb-admin.css" rel="stylesheet">
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-select.min.js"></script>
+<!-- Morris Charts CSS -->
+<link href="css/plugins/morris.css" rel="stylesheet">
+<script src="js/permissions.js"></script>
+<!-- Custom Fonts -->
+<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet"
+	type="text/css">
+
+<style type="text/css">
+.aa {
+	background-color: #000;
+}
+</style>
+</head>
+
+<body>
+
+	<div id="wrapper">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="javascript:void(0)">用户权限</a>
+			</div>
+			<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav side-nav">
+					<li><a href="#" data-toggle="collapse" data-target="#demo1"><i
+							class="fa fa-fw fa-dashboard"></i> 纺机管理<i
+							class="fa fa-fw fa-caret-down"></i></a>
+						<ul id="demo1" class="collapse">
+							<li><a href="main.html">机器信息查询</a></li>
+							<li><a href="main_machineinfo.html">机器管理</a></li>
+						</ul></li>
+
+					<li><a href="javascript:;" data-toggle="collapse"
+						data-target="#demo"><i class="glyphicon glyphicon-zoom-in"></i>
+							历史记录<i class="fa fa-fw fa-caret-down"></i></a>
+						<ul id="demo" class="collapse">
+							<li><a href="recordlist.html">故障记录</a></li>
+							<li><a href="recordlist1.html">保养记录</a></li>
+							<li><a href="recordlist2.html">领料记录</a></li>
+						</ul></li>
+
+					<li><a href="#" data-toggle="collapse" data-target="#demo2"
+						aria-haspopup="true" aria-expanded="true"><i
+							class="glyphicon glyphicon-pencil"></i> 用户权限 <i
+							class="fa fa-fw fa-caret-down"></i></a>
+						<ul id="demo2" class="collapse in  nav-pills nav-stacked "
+							aria-expanded="true">
+							<li class="aa"><a href="permissions.html">权限分配</a></li>
+							<li><a href="updateuser.html">权限管理</a></li>
+						</ul></li>
+
+					<li><a href="special-fault.html"><i
+							class="fa fa-fw fa-table"></i>故障库导入</a></li>
+					<li><a href="fault.html"><i class="fa fa-fw fa-edit"></i>
+							提交故障</a></li>
+					<li><a href="fault-review.html"><i
+							class="fa fa-fw fa-desktop"></i> 故障审核</a></li>
+
+					<li><a href="picking2.html"><i class="glyphicon glyphicon-list-alt"></i> 申请领料</a>					
+					<li><a href="board.html" target="_blank"><i class="fa fa-fw fa-file"></i>进入看板</a>
+					</li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
+
+		<div id="page-wrapper">
+
+			<div class="container-fluid">
+
+				<!-- Page Heading -->
+				<div class="row">
+					<div class="col-lg-12">
+						<h1 class="page-header">权限管理</h1>
+
+					</div>
+				</div>
+				<div class="row">
+					<select class="selectpicker" id="mchine_conditions_select">
+						<option>选择查询条件</option>
+						<option id="a">选择姓名</option>
+						<option id="b">选择工号</option>
+					</select> <input type="text" id="mchine_conditions">
+					<button class="btn" id="mchine_conditions_btn">查询</button>
+
+
+
+				</div>
+				<div style="padding: 10px"></div>
+				<div class="row">
+					<div>
+						<table class="table table-striped" id="permissions_table"></table>
+					</div>
+				</div>
+				<div class="row">
+					<!-- <div style="padding: 300px"></div> -->
+				</div>
+			</div>
+
+
+		</div>
+
+	</div>
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4>用户权限信息</h4>
+				</div>
+				<div class="modal-body">
+					<label>选择允许访问的厂区：</label> <select id="machine_place"
+						class="selectpicker" multiple>
+					</select>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary"
+						id="change_permissions">提交</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4>分配账户类型</h4>
+				</div>
+				<div class="modal-body">
+					<label>选择账户类型：</label> <select id="machine_place1"
+						class="selectpicker">
+						<option value="admin">超级用户(所有权限)</option>
+						<option value="chief">设备科长(提交故障，看纺机图，导入故障库，导入结构图，管理机器信息，进入看板，审核故障)</option>
+						<option value="monitor">车间主任(提交故障，看纺机图，进入看板，审核故障)</option>
+						<option value="worker">维修工(提交故障，看纺机图，进入看板，维修和保养人员名单)</option>
+						<option value="productManager">看板账户(提交故障，看纺机结构图，进入看板)</option>
+						<option value="account">普通用户(提交故障，看纺机结构图)</option>
+					</select>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary"
+						id="change_permissions1">提交</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+	<script type="text/javascript">
+       Initialize() ;
+    </script>
+
+
+</body>
+
+</html>

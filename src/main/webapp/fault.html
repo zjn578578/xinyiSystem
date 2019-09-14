@@ -1,0 +1,244 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>故障报修</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css">
+    <!-- Custom CSS -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+    <script src="js/jquery.js"></script>
+    <script src="js/review.js"></script>
+    <script src="js/bootstrap-select.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="javascript:void(0)">故障审核</a>
+            </div>          
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                 <li>
+                    <a href="#" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-dashboard"></i> 纺机管理<i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="demo" class="collapse">
+                        <li>
+                            <a href="main.html">机器信息查询</a>
+                        </li>
+                        <li>
+                            <a href="main_machineinfo.html">机器管理</a>
+                        </li>
+                    </ul>
+                </li>
+                
+              <li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#demo1"><i class="glyphicon glyphicon-pencil"></i> 用户权限 <i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="demo1" class="collapse">
+                        <li>
+                            <a href="permissions.html">权限分配</a>
+                        </li>
+                        <li>
+                            <a href="updateuser.html">权限管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#demo2"><i class="glyphicon glyphicon-zoom-in"></i> 历史记录<i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="demo2" class="collapse">
+                        <li>
+                            <a href="recordlist.html">故障记录</a>
+                        </li>
+                        <li>
+                            <a href="recordlist1.html">保养记录</a>
+                        </li>
+                        <li><a href="recordlist2.html">领料记录</a></li>
+                    </ul>
+                </li>
+                    
+                <li>
+                    <a href="special-fault.html"><i class="fa fa-fw fa-table"></i>故障库导入</a>
+                </li>
+                <li  class="active">
+                    <a href="fault.html"><i class="fa fa-fw fa-edit"></i> 提交故障</a>
+                </li>
+                <li>
+                    <a href="fault-review.html"><i class="fa fa-fw fa-desktop"></i> 故障审核</a>
+                </li>
+                
+ 					<li><a href="picking2.html"><i class="glyphicon glyphicon-list-alt"></i> 申请领料</a>               
+                <li><a href="board.html" target="_blank"><i class="fa fa-fw fa-file"></i>进入看板</a>
+					</li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        故障报修
+                    </h1>
+
+                </div>
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <div class="col-lg-6">
+
+                    <form role="form">
+
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label>选择分厂</label>
+                                <select  id="s_send_to" class="selectpicker form-control">
+                                    <option>请选择分厂</option>
+                                </select>
+                            </div>
+                            
+                           <div class="form-group">
+                            <div class="col-md-6">
+                                <label>报修部门</label>
+                                <select  id="s_department" class="selectpicker form-control">
+                                    <option>请选择部门</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label>机台类型</label>
+                                <select  id="s_mType" class="selectpicker form-control">
+                                    <option>请选择机器类型</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label>机台ID</label>
+                                <select  id="s_mId" class="selectpicker form-control">
+                                    <option>机台ID</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label>报修类型</label>
+                                <select  id="s_sendType" class="selectpicker form-control">
+                                    <option>请选报修类型</option>
+                                    <option>电工</option>
+                                    <option>机工</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+             
+                        </div>
+                          
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label>报修人</label>
+                                <input class="form-control" placeholder="报修人" id="s_person">
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <label>故障类型</label>
+                                <select  id="s_acType" class="selectpicker form-control" disabled="disabled">
+                                    <option>其他</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                         <div class="col-md-10">
+                            <label>故障描述</label>
+                            <textarea class="form-control" rows="5" id="s_describe"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                     <div class="col-md-8">
+                        <label>添加图片</label>
+                        <form action="imageUpload" method="post" enctype="multipart/form-data">
+                        <input type="file" name="inputBox" id="inputBox"  >
+                        </form>
+                        <img src="" id="img">
+                    </div> 
+                </div>
+
+
+
+                <div class="form-group">
+                 <div class="col-md-8">
+                  <div class="row" style="margin-top:25px"></div>
+
+                  <button type="button" class="btn btn-success" id="button_review">提交</button>
+              </div>
+          </div>
+
+
+
+
+
+      </form>
+
+  </div>
+
+</div>
+<!-- /.row -->
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<!-- jQuery -->
+
+<script type="text/javascript">
+    review();
+</script>
+</body>
+
+</html>

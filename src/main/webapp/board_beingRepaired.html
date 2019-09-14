@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="css/amazeui.min.css" />
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/bootstrap-table.css" />
+		<link rel="stylesheet" href="css/bootstrap-select.min.css" />
+	</head>
+	<body>
+		<table class="am-table am-table-striped am-table-hover table-main" id="beingRepairedTable">
+			<thead>
+								<tr>
+									
+									<th class="table-id">单号</th>
+									<th class="table-title">机台号</th>
+									<th class="table-title">机台名称</th>
+									<th class="table-title">申报时间</th>
+									<th class="table-title">申报人</th>
+									<th class="table-title">维修人</th>
+									<th class="table-type">故障现象</th>
+									<th class="table-author am-hide-sm-only">维修状况</th>
+									<th class="table-date am-hide-sm-only">故障类型</th>
+									<th class="table-type">分厂</th>
+									<th class="table-set">操作</th>
+								</tr>
+							</thead>
+							<tbody id="tab">								
+							</tbody>
+	</table>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">请确认信息</h4>
+      </div>
+      <div class="modal-body">
+      当前单号：<input id="sub" disabled="disabled">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" onclick="wxwc()">确认提交</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+	
+							
+	</body>
+		<script src="js/jquery.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-select.min.js"></script>
+		<script type="text/javascript">
+		
+		function getid(id){
+			document.getElementById('sub').value=id;
+		}
+		
+		window.onload=function(){
+			var flag=localStorage.getItem("flag");
+			if (flag!=0){
+				var str=1;
+		$.ajax({
+		type:"post",
+		url:"./getBeingRepairedInformation",
+		data:{key1:str},
+		statusCode:{
+			404:function(){
+				alert("404");
+			},
+			500:function(){
+				alert("500");
+			}
+		},
+		success:function(data,Status){
+			var obj=eval(data);
+			for(var i=0;i<obj.length;i++){
+			document.getElementById('beingRepairedTable').innerHTML+=`
+									<tr id="label1">					
+									<td id="id${obj[i]["s_id"]}">${obj[i]["s_id"]}</td>
+									<td id="mid${obj[i]["s_id"]}">${obj[i]["s_mId"]}</td>
+									<td id="mType${obj[i]["s_id"]}">${obj[i]["s_mType"]}</td>
+									<td id="date${obj[i]["s_id"]}">${obj[i]["s_date"]}</td>
+									<td id="person${obj[i]["s_id"]}">${obj[i]["s_person"]}</td>
+									<td id="fixperson${obj[i]["s_id"]}">${obj[i]["s_fixperson"]}</td>
+									<td id="describe${obj[i]["s_id"]}">${obj[i]["s_describe"]}</td>
+									<td class="am-hide-sm-only" style="color: red;" id="status${obj[i]["s_id"]}">${obj[i]["s_status"]}</td>
+									<td class="am-hide-sm-only" id="acType${obj[i]["s_id"]}">${obj[i]["s_acType"]}</td>
+									<td  id="sendTo${obj[i]["s_id"]}">${obj[i]["s_sendTo"]}</td>
+									<td>
+										<div class="am-btn-toolbar">
+											<div class="am-btn-group am-btn-group-xs">
+												<a class="am-btn am-btn-default am-btn-xs am-text-secondary" target="_blank" href="picking.html?pick_type=${obj[i]["s_id"]}&name=${obj[i]["s_fixperson"]}">申请领料</a>
+												<a class="am-btn am-btn-default am-btn-xs am-text-secondary" target="_blank" href="picking1.html?pick_type=${obj[i]["s_id"]}&name=${obj[i]["s_fixperson"]}">申请返料</a>
+ 												<!-- <a class="am-btn am-btn-default am-btn-xs am-text-secondary" style="color: green;"  onclick="wxwc(${obj[i]["s_id"]})">维修完成</a> -->
+												<a class="am-btn am-btn-default am-btn-xs am-text-secondary" style="color: green;" id="${obj[i]["s_id"]}"   data-toggle="modal" data-target="#myModal" onclick="getid(this.id)">维修完成</a>
+												</div>
+										</div>
+									</td>
+								</tr>`
+			}
+		}						
+	});
+			}
+		}
+		function wxwc(){
+			var flag_id=document.getElementById('sub').value;
+			var fixperson=document.getElementById('fixperson'+flag_id).value;
+			var mid=document.getElementById('mid'+flag_id).innerText;
+			var mType=document.getElementById('mType'+flag_id).innerText;
+			var date=document.getElementById('date'+flag_id).innerText;
+			var person=document.getElementById('person'+flag_id).innerText;
+			var describe=document.getElementById('describe'+flag_id).innerText;
+			var status=document.getElementById('status'+flag_id).innerText;
+			var acType=document.getElementById('acType'+flag_id).innerText;
+			var sendTo=document.getElementById('sendTo'+flag_id).innerText;
+			var ss={"s_id":String(flag_id),"s_mid":mid,"s_mType":mType,"s_date":date,"s_person":person,"s_fixperson":fixperson,"s_describe":describe,"s_status":status,"s_acType":acType,"s_sendTo":sendTo}
+			console.log(ss);
+			$.ajax({
+				type:"post",
+				url:"./finishfix",
+				data:JSON.stringify(ss),
+		        contentType : "application/json;charset=UTF-8",
+				statusCode:{
+					404:function(){
+						alert("404");
+					},
+					500:function(){
+						alert("500");
+					}
+				},
+				success:function(data,Status){
+						alert("提交成功");	
+						window.parent.document.getElementById("id123").src="board_confirm.html"; 
+						location.reload();
+				}				
+			});
+			
+		}
+	</script>
+</html>

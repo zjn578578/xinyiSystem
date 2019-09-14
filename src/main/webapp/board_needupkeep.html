@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title></title>
+<link rel="stylesheet" href="css/amazeui.min.css" />
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/bootstrap-table.css" />
+<link rel="stylesheet" href="css/bootstrap-select.min.css" />
+
+</head>
+<body>
+	<div id="toolbar" align="right">
+		<button type="button"  class="btn btn-success" data-toggle="modal"
+			data-target="#myModal">选择保养完成的信息</button>
+	</div>
+	<table class="table-no-bordered" id="upKeepTable"></table>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">填写保养人</h4>
+				</div>
+				<div class="modal-body" >
+				<select  id="work_person" class="selectpicker form-control" multiple>
+			</select>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id="getdata">提交</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+</body>
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-select.min.js"></script>
+
+<script type="text/javascript">
+$.ajax({
+	type: "post",
+	url: "./selectworker",
+	data:{
+		test:"key"
+	},
+	statusCode: {
+		404: function() {
+			alert("404");
+		},
+		500: function() {
+			alert("500");
+		}
+	},
+	success: function(data, Status) {
+		console.log({data});
+		let json=eval(data);
+		for(let i=0;i<json.length;i++){
+			let temp=json[i]['a_xingming'];
+			document.getElementById('work_person').innerHTML+=`<option>${temp}</option>` ;
+		}
+		$('#work_person').selectpicker('refresh'); 
+	}
+});	
+
+
+		window.onload=function(){
+			var flag=localStorage.getItem("flag");
+			if (flag!=0){
+				var str=1;
+		$.ajax({
+		type:"post",
+		url:"./needupdateupkeep",
+		data:{key1:str},
+		statusCode:{
+			404:function(){
+				alert("404");
+			},
+			500:function(){
+				alert("500");
+			}
+		},
+		success:function(data,Status){
+			var obj=eval(data);
+			console.log(data);
+			$('#upKeepTable').bootstrapTable({
+				columns : [
+					{
+			            checkbox: true
+			        },				
+					{
+						field : 'uMmid',
+						title : '机器编号'
+					} ,	
+					{
+						field : 'uItem',
+						title : '保养项目'
+					} ,	
+					{
+						field : 'uSendto',
+						title : '分厂'
+					} ,	
+					{
+						field : 'uMtype',
+						title : '机器类型'
+					},
+					{
+						field : 'uStatus',
+						title : '当前状况'
+					}],
+					data: obj,
+					sortable: false,   
+					clickToSelect : true,
+			});	
+			
+
+		}	
+		
+		
+	});
+			}
+		}
+		var $table = $('#upKeepTable');
+		var $getdata = $('#getdata');
+		$getdata.click(function() {			
+		   	let a =JSON.stringify($table.bootstrapTable('getSelections'));
+		   	let mydata=eval(a);
+		   	let work_person=$("#work_person").val();
+		   	
+		   	for(let i=0;i<mydata.length;i++){
+	   			delete mydata[i]['0'];
+	   			mydata[i]['uPerson']='';
+	   			for(let j=0;j<work_person.length;j++){
+	   				mydata[i]['uPerson']+=work_person[j]+' ';
+	   			}
+		   	}
+		   	
+		   	$.ajax({
+				type:"post",
+				url:"./finishupkeep",
+				data:JSON.stringify(mydata),	
+		        dataType:"json",
+				contentType: 'application/json;charset=UTF-8',
+				statusCode:{
+				404:function(){
+					alert("404");
+				},
+				500:function(){
+					alert("500");
+				}
+			},success:function(data,Status){
+				alert("上传成功");
+				location.reload();
+			}
+			});
+		 	
+	    });			
+		</script>
+
+
+</html>

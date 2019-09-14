@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>故障审核</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/failure-review.js"></script>
+<!-- Custom CSS -->
+<link href="css/sb-admin.css" rel="stylesheet">
+
+<!-- Custom Fonts -->
+<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet"
+	type="text/css">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+	<div id="wrapper">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="javascript:void(0)">故障审核</a>
+			</div>
+			<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav side-nav">
+					<li><a href="#" data-toggle="collapse" data-target="#demo"><i
+							class="fa fa-fw fa-dashboard"></i> 纺机管理<i
+							class="fa fa-fw fa-caret-down"></i></a>
+						<ul id="demo" class="collapse">
+							<li><a href="main.html">机器信息查询</a></li>
+							<li><a href="main_machineinfo.html">机器管理</a></li>
+						</ul></li>
+						<li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#demo1"><i class="glyphicon glyphicon-zoom-in"></i> 历史记录<i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="demo1" class="collapse">
+                        <li>
+                            <a href="recordlist.html">故障记录</a>
+                        </li>
+                        <li>
+                            <a href="recordlist1.html">保养记录</a>
+                        </li>
+                        <li><a href="recordlist2.html">领料记录</a></li>
+                    </ul>
+                </li>
+                    
+					<li><a href="javascript:;" data-toggle="collapse"
+						data-target="#demo2"><i class="glyphicon glyphicon-pencil"></i>
+							用户权限 <i class="fa fa-fw fa-caret-down"></i></a>
+						<ul id="demo2" class="collapse">
+							<li><a href="permissions.html">权限分配</a></li>
+							<li><a href="updateuser.html">权限管理</a></li>
+						</ul></li>
+					<li><a href="special-fault.html"><i
+							class="fa fa-fw fa-table"></i> 故障库导入</a></li>
+					<li><a href="fault.html"><i class="fa fa-fw fa-edit"></i>
+							提交故障</a></li>
+					<li class="active"><a href="fault-review.html"><i
+							class="fa fa-fw fa-desktop"></i> 故障审核</a></li>
+					
+					<li><a href="picking2.html"><i class="glyphicon glyphicon-list-alt"></i> 申请领料</a>
+					<li><a href="board.html" target="_blank"><i class="fa fa-fw fa-file"></i>进入看板</a>
+					</li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
+
+		<div id="page-wrapper">
+
+			<div class="container-fluid">
+
+				<!-- Page Heading -->
+				<div class="row">
+					<div class="col-lg-12">
+						<h1 class="page-header">故障审核</h1>
+
+					</div>
+				</div>
+				<!-- /.row -->
+
+				<!-- Main jumbotron for a primary marketing message or call to action -->
+
+
+				<div class="row" id="row_panel">
+
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel">
+						<div class="modal-dialog" style="width:80%;" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<h4 class="modal-title" id="myModalLabel">维修情况</h4>
+								</div>
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-md-12">
+											<form class="form-horizontal" role="form" id="storage_detail"
+												style="margin-top: 25px">
+												<div class="row">
+													<div class="col-md-6 col-sm-6">
+													<div class="form-group">
+															<label for="" class="control-label col-md-6 col-sm-6">
+																<span>分厂：</span>
+															</label>
+															<div class="col-md-4 col-sm-4">
+																<p id="s_sendTo" class="form-control-static"></p>
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="" class="control-label col-md-6 col-sm-6">
+																<span>部门：</span>
+															</label>
+															<div class="col-md-4 col-sm-4">
+																<p id="s_department" class="form-control-static"></p>
+															</div>
+														</div>
+													
+													
+														<div class="form-group">
+															<label for="" class="control-label col-md-6 col-sm-6">
+																<span>故障编号：</span>
+															</label>
+															<div class="col-md-4 col-sm-4">
+																<p id="s_id" class="form-control-static"></p>
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="" class="control-label col-md-6 col-sm-6">
+																<span>维修人姓名：</span>
+															</label>
+															<div class="col-md-4 col-sm-4">
+																<p id="s_fixperson" class="form-control-static"></p>
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="" class="control-label col-md-6 col-sm-6">
+																<span>报修人姓名：</span>
+															</label>
+															<div class="col-md-4 col-sm-4">
+																<p id="s_person" class="form-control-static"></p>
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="" class="control-label col-md-6 col-sm-6">
+																<span>机器ID：</span>
+															</label>
+															<div class="col-md-4 col-sm-4">
+																<p id="s_mId" class="form-control-static"></p>
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="" class="control-label col-md-6 col-sm-6">
+																<span>机器类型：</span>
+															</label>
+															<div class="col-md-4 col-sm-4">
+																<p id="s_mType" class="form-control-static"></p>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6 col-sm-6">
+														<div class="form-group">
+															<label for="" class="control-label col-md-6 col-sm-6">
+																<span>故障类型：</span>
+															</label>
+															<div class="col-md-4 col-sm-4">
+																<p id="s_acType" class="form-control-static"></p>
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6 col-sm-6">
+													
+														<table id="show_parts_date"></table>
+														领料和返料情况
+													</div>
+													
+													<div class="col-md-6 col-sm-6">
+													实际用料单
+														<table id="show_parts_date1"></table>
+													</div>
+													
+													<div class="col-md-6 col-sm-6">
+													<label for="" class="control-label col-md-6 col-sm-6">
+																<span>未通过原因:</span>
+															</label>
+														<textarea class="form-control" rows="5" id="mytextarea"></textarea>
+													</div>
+												</div>
+											</form>
+										</div>
+										<div class="col-md-6 col-sm-6" style="width:100%;">
+											<div class="form-group" >
+												<label for="" class="control-label col-md-6 col-sm-6" style="width:20%;"><span>故障图片：</span></label>
+												<div class="col-md-4 col-sm-4" id="fault_img" style="width:100%;">
+													
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" id="mybtn" onclick="mybtn()">未通过</button>
+									<button type="button" class="btn btn-primary" id="button_save"  onclick="save_data()">保存通过</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- /.col-sm-4 -->
+				</div>
+
+				<div class="page-header">
+					<h1>说明信息</h1>
+				</div>
+				<div class="well">
+					<p>红色标签代表着未维修————绿色标签代表着待审核————灰色标签代表未通过</p>
+				</div>
+				
+			</div>
+			<!-- /.container-fluid -->
+
+		</div>
+		<!-- /#page-wrapper -->
+
+	</div>
+	<!-- /#wrapper -->
+
+	<!-- jQuery -->
+	<script type="text/javascript">
+        Initialize();
+    </script>
+
+</body>
+
+</html>

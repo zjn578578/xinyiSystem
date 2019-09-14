@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="css/amazeui.min.css" />
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="css/bootstrap-table.css" />
+		<link rel="stylesheet" href="css/bootstrap-select.min.css" />
+		
+	</head>
+	<body>
+		<table class="table-no-bordered"  id="upKeepTable"></table>	
+		
+		
+
+	</body>
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-select.min.js"></script>
+
+	<script type="text/javascript">
+		window.onload=function(){
+			var flag=localStorage.getItem("flag");
+			if (flag!=0){
+				var str=1;
+		$.ajax({
+		type:"post",
+		url:"./getUpKeepInformation",
+		data:{key1:str},
+		statusCode:{
+			404:function(){
+				alert("404");
+			},
+			500:function(){
+				alert("500");
+			}
+		},
+		success:function(data,Status){
+			var obj=eval(data);
+			console.log(data);
+			obj.sort((a,b)=>a.uCycle-b.uCycle);
+			$('#upKeepTable').bootstrapTable({
+				columns : [				
+					{
+						field : 'uMmid',
+						title : '机器编号'
+					} ,	
+					{
+						field : 'uItem',
+						title : '保养项目'
+					} ,	
+					{
+						field : 'uSendto',
+						title : '分厂'
+					} ,	
+					{
+						field : 'uMtype',
+						title : '机器类型'
+					},
+					{
+						field : 'uStatus',
+						title : '当前状况'
+					},{
+						field:'uDate',
+						title:'剩余时间(天)'
+					}],
+					data: obj,
+					
+			});	
+			
+			upkeepTime(obj);
+
+		}	
+		
+		
+	});
+			}
+		}
+		
+		
+		function upkeepTime(json){
+			let dateStr=getNewDate();
+			for(let i=0;i<json.length;i++){
+				let time=json[i]['uStartTime'];
+				let date=new Date(time);
+				dateStr=new Date(dateStr);
+				let mydate=(dateStr - date) / (1000 * 60 * 60 * 24);
+				json[i]['uDate']=Math.round((json[i]['uCycle']-mydate));
+				if(mydate>json[i]['uCycle']){					
+					console.log("需要维护");
+					console.log(json[i]['uId']);
+					var jsondata=JSON.stringify({"uId":json[i]['uId']});
+					$.ajax({
+						type:"post",
+						url:"./updateupkeep",
+						data:jsondata,
+				         contentType : "application/json;charset=UTF-8",
+						statusCode:{
+							404:function(){
+								alert("404");
+							},
+							500:function(){
+								alert("500");
+							}
+						},
+						success:function(data,Status){					
+							
+						}	
+		
+					});
+				}			
+			}
+			$('#upKeepTable').bootstrapTable('load',json);
+			setTimeout("upkeepTime()",1000 * 60 * 60 * 24);
+		}
+		function getNewDate(){
+			var day2 = new Date();
+			 day2.setTime(day2.getTime());
+			 var s2 = day2.getFullYear()+"-" + (day2.getMonth()+1) + "-" + day2.getDate();
+			 return s2;
+		}
+		
+	
+		
+		</script>
+		
+	
+</html>

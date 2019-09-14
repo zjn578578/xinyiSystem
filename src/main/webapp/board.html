@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<link rel="stylesheet" href="css/amazeui.min.css" />
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<script src="js/jquery.js"></script>
+<style type="text/css">
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+body ul li {
+	list-style: none;
+}
+
+.top {
+	height: 100px;
+	width: 100%;
+}
+
+.sty {
+	display: inline-block;
+	width: 150px;
+	height: 100px;
+	background-color: #C0C0C0;
+	color: black;
+	text-decoration: none;
+	font-size: 30px;
+	line-height: 100px;
+	text-align: center;
+	-moz-box-shadow: 5px 5px 5px #999 inset;
+	-webkit-box-shadow: 5px 5px 5px #999 inset;
+	box-shadow: 5px 5px 5px #999 inset;
+}
+
+.top_wwx:hover, .top_wxz:hover, .top_qpj:hover {
+	background-color: #474747;
+	color: black;
+}
+
+.iframe1 {
+	width: 100%;
+	height: 65%;
+}
+
+.box_dl {
+	position: fixed;
+	top: 100px;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	background-color: #E9ECF1;
+	width: 350px;
+	height: 300px;
+	z-index: 999;
+}
+
+.zz {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 998;
+}
+
+.box-title {
+	margin-top: 10px;
+	border-bottom: 1px solid #A6A6A6;
+}
+
+.box-title h1 {
+	text-align: center;
+}
+
+.box-a {
+	width: 100%;
+}
+
+.box-a ul {
+	width: 96%;
+	margin: 0 auto;
+	padding-left: 0;
+}
+
+.box-a ul li {
+	margin-top: 30px;
+	height: 30px;
+	line-height: 30px;
+	display: flex;
+}
+
+.box-a ul li p {
+	margin-right: 15px;
+	width: 80px;
+	height: 30px;
+	line-height: 30px;
+	text-align: right;
+}
+
+.box-btn {
+	padding-top: 35px;
+	display: flex;
+	justify-content: space-around;
+}
+</style>
+</head>
+<body>
+
+	<div class="top">
+		<a class="top_wwx sty" href="board_unRepaired.html" target="iframe1">
+			未维修 </a> <a class="top_wxz sty" href="board_beingRepaired.html"
+			target="iframe1"> 维修中 </a> <a class="top_qpj sty"
+			href="board_upkeep.html" id="bytm" target="iframe1"> 保养条目 </a> <a
+			class="top_qpj sty" href="board_needupkeep.html" target="iframe1">
+			需保养 </a>
+	</div>
+
+
+
+	<iframe src="board_unRepaired.html" class="iframe1" name="iframe1"
+		id="iframe1"> </iframe>
+	<iframe id="id123" src="board_confirm.html" width="100%" height="20%"></iframe>
+
+
+
+</body>
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap-suggest.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/board.js"></script>
+<script type="text/javascript">
+setTimeout("location.reload();", 1000*5*60);
+
+window.onload=function(){
+	var flag=localStorage.getItem("flag");
+	if (flag!=0){
+		var str=1;
+$.ajax({
+type:"post",
+url:"./getUpKeepInformation",
+data:{key1:str},
+statusCode:{
+	404:function(){
+		alert("404");
+	},
+	500:function(){
+		alert("500");
+	}
+},
+success:function(data,Status){
+	var obj=eval(data);
+	upkeepTime(obj);
+
+}	
+
+
+});
+	}
+}
+
+
+function upkeepTime(json){
+	let dateStr=getNewDate();
+	for(let i=0;i<json.length;i++){
+		let time=json[i]['uStartTime'];
+		let date=new Date(time);
+		dateStr=new Date(dateStr);
+		let mydate=(dateStr - date) / (1000 * 60 * 60 * 24);
+		json[i]['uDate']=Math.round((json[i]['uCycle']-mydate)*10)/10;
+		
+		if(json[i]['uDate']<=0){
+			document.getElementById('bytm').style.color="red";
+			alert("你有需要保养机器！");
+			return;
+		}		
+	}
+}
+document.getElementById('bytm').onclick=function(){
+	document.getElementById('bytm').style.color="black";
+}
+function getNewDate(){
+	var day2 = new Date();
+	 day2.setTime(day2.getTime());
+	 var s2 = day2.getFullYear()+"-" + (day2.getMonth()+1) + "-" + day2.getDate();
+	 return s2;
+}
+
+	</script>
+</html>

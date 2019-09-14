@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="css/amazeui.min.css" />
+		<style type="text/css">
+			body{
+				background-color: #FFFFDD;
+			}
+			.table_top{
+				height: 50px;
+				width: 100%;
+				background-color: #CCCCCC;
+				line-height: 50px;
+				text-align: center;
+
+			}
+		</style>
+	</head>
+	<body>
+		<div class="table_top"><h2>待审核区</h2></div>
+			<table class="am-table am-table-striped am-table-hover table-main" id="comfirmInformation">
+			<thead>
+								<tr>
+									
+									<th class="table-id">单号</th>
+									<th class="table-title">机台号</th>
+									<th class="table-title">机台名称</th>
+									<th class="table-title">申报时间</th>
+									<th class="table-title">申报人</th>
+									<th class="table-title">维修人</th>
+									<th class="table-type">故障现象</th>
+									<th class="table-author am-hide-sm-only">维修状况</th>
+									<th class="table-author am-hide-sm-only">未通过理由</th>
+									<th class="table-date am-hide-sm-only">故障类型</th>
+									<th class="table-type">分厂</th>
+									
+								</tr>
+							</thead>
+							<tbody id="tab">		
+								</tbody>
+								</table>
+	</body>
+		<script src="js/jquery.js"></script>
+		<script type="text/javascript">
+		window.onload=function(){
+			var flag=localStorage.getItem("flag");
+			if (flag!=0){
+				var str=1;
+		$.ajax({
+		type:"post",
+		url:"./getConfirmInformation",
+		data:{key1:str},
+		statusCode:{
+			404:function(){
+				alert("404");
+			},
+			500:function(){
+				alert("500");
+			}
+		},
+		success:function(data,Status){
+			var obj=eval(data);
+			console.log({obj});
+			for(var i=0;i<obj.length;i++){
+			if(obj[i]["s_listType"]==null){
+				obj[i]["s_listType"]=' ';
+			}
+			document.getElementById('comfirmInformation').innerHTML+=`
+									<tr id="label1">					
+									<td id="id1">${obj[i]["s_id"]}</td>
+									<td id="mc1">${obj[i]["s_mId"]}</td>
+									<td id="jg1">${obj[i]["s_mType"]}</td>
+									<td id="jg1">${obj[i]["s_date"]}</td>
+									<td id="jg1">${obj[i]["s_person"]}</td>
+									<td id="jg1">${obj[i]["s_fixperson"]}</td>
+									<td id="jg1">${obj[i]["s_describe"]}</td>
+									<td class="am-hide-sm-only" style="color: red;" id="fbf1">${obj[i]["s_status"]}</td>
+									<td  id="ztxq1">${obj[i]["s_listType"]}</td>
+									<td class="am-hide-sm-only" id="dz1">${obj[i]["s_acType"]}</td>
+									<td  id="ztxq1">${obj[i]["s_sendTo"]}</td>
+									</td>
+								</tr>`
+			}
+		}						
+	});
+			}
+		}
+		</script>
+	
+</html>

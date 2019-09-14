@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>机器管理</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/bootstrap-table.css" />
+<link rel="stylesheet" href="css/bootstrap-select.min.css" />
+
+<!-- Custom CSS -->
+<link href="css/sb-admin.css" rel="stylesheet">
+<script src="js/jquery.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-table.min.js"></script>
+<script src="js/bootstrap-table-zh-CN.min.js"></script>
+<script src="js/bootstrap-select.min.js"></script>
+<!-- Morris Charts CSS -->
+<link href="css/plugins/morris.css" rel="stylesheet">
+<script src="js/main_machinestructure.js"></script>
+
+<!-- Custom Fonts -->
+<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet"
+	type="text/css">
+
+<style type="text/css">
+.aa {
+	background-color: #000;
+}
+</style>
+</head>
+
+<body>
+
+	<div id="wrapper">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="javascript:void(0)">机器管理</a>
+			</div>
+
+			<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav side-nav">
+					<li><a href="#" data-toggle="collapse" data-target="#demo"
+						aria-haspopup="true" aria-expanded="true"><i
+							class="fa fa-fw fa-dashboard"></i> 纺机管理<i
+							class="fa fa-fw fa-caret-down"></i></a>
+						<ul id="demo" class="collapse in  nav-pills nav-stacked "
+							aria-expanded="true">
+							<li><a href="main.html">机器信息查询</a></li>
+							<li class="aa"><a href="main_machineinfo.html">机器管理</a></li>
+						</ul></li>
+						<li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#demo1"><i class="glyphicon glyphicon-zoom-in"></i> 历史记录<i class="fa fa-fw fa-caret-down"></i></a>
+                    <ul id="demo1" class="collapse">
+                        <li>
+                            <a href="recordlist.html">故障记录</a>
+                        </li>
+                        <li>
+                            <a href="recordlist1.html">保养记录</a>
+                        </li>
+                        <li><a href="recordlist2.html">领料记录</a></li>
+                    </ul>
+                </li>
+                    
+					<li><a href="javascript:;" data-toggle="collapse"
+						data-target="#demo2"><i class="glyphicon glyphicon-pencil"></i>
+							用户权限 <i class="fa fa-fw fa-caret-down"></i></a>
+						<ul id="demo2" class="collapse">
+							<li><a href="permissions.html">权限分配</a></li>
+							<li><a href="updateuser.html">权限管理</a></li>
+						</ul></li>
+					<li><a href="special-fault.html"><i
+							class="fa fa-fw fa-table"></i>故障库导入</a></li>
+					<li><a href="fault.html"><i class="fa fa-fw fa-edit"></i>
+							提交故障</a></li>
+					<li><a href="fault-review.html"><i
+							class="fa fa-fw fa-desktop"></i> 故障审核</a></li>
+					
+					<li><a href="picking2.html"><i class="glyphicon glyphicon-list-alt"></i> 申请领料</a>			
+					<li><a href="board.html" target="_blank"><i class="fa fa-fw fa-file"></i>进入看板</a>
+					</li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
+
+		<div id="page-wrapper">
+
+			<div class="container-fluid">
+
+				<!-- Page Heading -->
+				<div class="row">
+					<div class="col-lg-12">
+						<h1 class="page-header" id="place">当前位置:</h1>
+					</div>
+				</div>
+
+				<div class="row">
+					<div id="toolbar">
+						<button id="button" class="btn btn-default">创建一个新结构</button>
+						<button id="deleteTableData" class="btn btn-default">删除所有选中结构</button>
+						<button id="getTableData" class="btn btn-default">上传改动结构信息</button>
+					</div>
+					<div class="col-xs-6">
+						<table class="table table-striped" id="permissions_table"></table>
+					</div>
+				</div>
+				<div class="row">
+					<!-- <div style="padding: 300px"></div> -->
+				</div>
+			</div>
+
+
+		</div>
+
+	</div>
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4>用户权限信息</h4>
+				</div>
+				<div class="modal-body">
+					<label>选择允许访问的厂区：</label> <select id="machine_place"
+						class="selectpicker" multiple>
+						<option value=1>1号区域</option>
+						<option value=2>2号区域</option>
+						<option value=3>3号区域</option>
+						<option value=4>4号区域</option>
+					</select>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary"
+						id="change_permissions">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	Initialize ();
+
+
+		
+		
+		
+		
+       
+    </script>
+
+
+</body>
+
+</html>

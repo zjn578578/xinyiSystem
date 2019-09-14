@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+		<link rel="stylesheet" href="css/amazeui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css" />
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<style type="text/css">
+			html,
+			body {
+				height: 100%;
+			}
+			
+			.zz {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.5);
+				z-index: 998;
+				display: none;
+			}
+			
+			.img_box {
+				position: absolute;
+				top: 50px;
+				z-index: 999;
+				left: 50%;
+				margin-left: -200px;
+				display: none;
+			}
+			
+			.img_box img {
+				width: 1000px;
+				
+			}
+			
+			.maintenanceLanding {
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				margin: 0 auto;
+				background-color: #E9ECF1;
+				width: 550px;
+				height: 500px;
+				z-index: 999;
+			}
+			
+			.box-title {
+				margin-top: 10px;
+				border-bottom: 1px solid #A6A6A6;
+			}
+			
+			.box-title h1 {
+				text-align: center;
+			}
+			
+			.box-a {
+				width: 100%;
+			}
+			
+			.box-a ul {
+				width: 96%;
+				margin: 0 auto;
+				padding-left: 0;
+			}
+			
+			.box-a ul li {
+				margin-top: 30px;
+				height: 30px;
+				line-height: 30px;
+				display: flex;
+			}
+			
+			.box-a ul li p {
+				margin-right: 15px;
+				width: 80px;
+				height: 30px;
+				line-height: 30px;
+				text-align: right;
+			}
+			
+			.box-btn {
+				padding-top: 350px;
+				display: flex;
+				justify-content: space-around;
+			}
+			.modal-body table {
+				width: 100%;
+			}
+			
+			.modal-body table tr td {
+				width: 160px;
+				height: 30px;
+				font-size: 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- Modal -->
+			<div class="input-group" style="width: 240px;">
+			<input type="text" class="form-control" id="cateCode_search" placeholder="故障搜索">
+			<div class="input-group-btn" style="width: 1px;">
+				<ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+			</div>
+		</div>
+		
+		
+		<div class="zz" id="zz" onclick="zz()"></div>
+		<div class="img_box" id="img_box">
+		</div>
+		<div class="maintenanceLanding" id="maintenanceLanding">
+			<div class="box-title">
+				<h1>维修人</h1>
+			</div>
+			<div class="work">
+			<select  id="work_person" class="selectpicker form-control" multiple  data-size="12">
+			</select>
+			</div>
+			<div class="box-btn">
+				<button type="button" onclick="qrtj()" style="width:500px">确认</button>
+			</div>
+		</div>
+		<table class="am-table am-table-striped am-table-hover table-main" id="unRepairedTable">
+			<thead>
+				<tr>
+
+					<th class="table-id">单号</th>
+					<th class="table-title">机台号</th>
+					<th class="table-title">机台类型</th>
+					<th class="table-title">申报时间</th>
+					<th class="table-title">申报人</th>
+					<th class="table-type">故障现象</th>
+					<th class="table-author am-hide-sm-only">维修状况</th>
+					<th class="table-date am-hide-sm-only">故障类型</th>
+					<th class="table-type">分厂</th>
+					<th class="table-set">操作</th>
+				</tr>
+			</thead>
+		</table>
+		
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">解决方案</h4>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" rows="3" id="fault_msg"></textarea>
+        <div id="show_photo"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+		
+		<script src="js/jquery.js"></script>
+		<script type="text/javascript" src="js/bootstrap.js"></script>
+		<script src="js/bootstrap-suggest.js"></script>
+		<script src="js/bootstrap-select.min.js"></script>
+	</body>
+	<script type="text/javascript">	
+	let record='';
+	setInterval(ajax, 1000*10);
+	
+	function ajax() {
+		$.ajax({
+			type: "post",
+			url: "./getUnrepairedInformation",
+			data:{
+				test:"key"
+			},
+			statusCode: {
+				404: function() {
+					alert("404");
+				},
+				500: function() {
+					alert("500");
+				}
+			},
+			success: function(data, Status) {
+				if(data.length!=record.length){				
+					var noticeAudio = "img/1.mp3";
+					var audio= new Audio(noticeAudio);
+					audio.play(); //播放
+					setTimeout("location.reload();", 1000*10);
+				}				
+			}
+		});	
+		}
+	
+	$.ajax({
+		type: "post",
+		url: "./selectworker",
+		data:{
+			test:"key"
+		},
+		statusCode: {
+			404: function() {
+				alert("404");
+			},
+			500: function() {
+				alert("500");
+			}
+		},
+		success: function(data, Status) {
+			let json=eval(data);
+			for(let i=0;i<json.length;i++){
+				let temp=json[i]['a_xingming'];
+				document.getElementById('work_person').innerHTML+=`<option>${temp}</option>` ;
+			}
+			$('#work_person').selectpicker('refresh');
+		}
+	});	
+	
+	
+	$("#cateCode_search").bsSuggest('init', {
+	    clearable: true,
+	    url: "./getdatatest.do",
+	    showBtn: false,
+	    idField: "fault_type",    //id字段
+	    keyField: "fault_msg",   //key字段
+	    effectiveFields: ["fault_type"],   //显示的有效字段
+	    effectiveFieldsAlias: {"fault_type":"故障类型"},    //字段别名,title显示
+	}).on("onSetSelectValue",function(e, keyword) {
+		let type=keyword.id;
+		let message=keyword.key;
+	    cate_code_add = keyword.key;
+	    console.log({type});
+	    console.log({message});   
+	    $('#myModal').modal('show');
+	    $('#fault_msg').html(cate_code_add);
+		$.ajax({
+			type: "post",
+			url: "./getSpecialPhoto.do",
+			data:{
+				type:type,
+				message:message
+			},
+			statusCode: {
+				404: function() {
+					alert("404");
+				},
+				500: function() {
+					alert("500");
+				}
+			},
+			success: function(data, Status) {
+				let json=eval(data);
+				console.log(json);
+				document.getElementById('show_photo').innerHTML=``;
+				for(let i=0;i<json.length;i++){
+					document.getElementById('show_photo').innerHTML+=`<div><a href="./special/${json[i]['path']}" target="_blank">${json[i]['path']}</a></div>`
+				}
+			} 
+		});
+	    
+	}).on("onUnsetSelectValue",function(e) {
+	    cate_code_add = '';
+	});
+	
+	
+
+		function lok_img(id) {
+			console.log();
+			var img_box = document.getElementById('img_box');
+			var zz = document.getElementById('zz');
+			img_box.style.display = "block";
+			zz.style.display = "block";
+			document.getElementById('img_box').innerHTML = `
+				 <img src="img/${id}.jpg"/> 
+			`
+
+		}
+
+		function zz() {
+			var img_box = document.getElementById('img_box');
+			var zz = document.getElementById('zz');
+			var maintenanceLanding = document.getElementById('maintenanceLanding');
+			maintenanceLanding.style.display = "none";
+			img_box.style.display = "none";
+			zz.style.display = "none";
+		}
+
+		function qrtj() {
+			let work_person=$('#work_person').val();
+			let person_wx="";
+			for(let i=0;i<work_person.length;i++){
+				person_wx+=work_person[i]+' ';
+			}
+			
+			console.log({person_wx});
+			var zz = document.getElementById('zz');
+			var maintenanceLanding = document.getElementById('maintenanceLanding');
+			zz.style.display = "none";
+			maintenanceLanding.style.display = "none";		
+			//获取的值
+/* 			var person_wx=document.getElementById('person').value; */
+			if(person_wx==null||person_wx==""){
+				alert("维修人姓名不能为空！");
+				return;
+			}
+			var mid=document.getElementById('mid'+flag_id).innerText;
+			var mType=document.getElementById('mType'+flag_id).innerText;
+			var date=document.getElementById('date'+flag_id).innerText;
+			var person=document.getElementById('person'+flag_id).innerText;
+			var describe=document.getElementById('describe'+flag_id).innerText;
+			var status=document.getElementById('status'+flag_id).innerText;
+			var acType=document.getElementById('acType'+flag_id).innerText;
+			var sendTo=document.getElementById('sendTo'+flag_id).innerText;
+			var ss={"s_id":String(flag_id),"s_mid":mid,"s_mType":mType,"s_date":date,"s_person":person,"s_describe":describe,"s_status":status,"s_acType":acType,"s_sendTo":sendTo,"s_fixperson":person_wx}
+			console.log(ss);
+			$.ajax({
+				type: "post",
+				url: "./startrepair",
+				data:JSON.stringify(ss),
+		        contentType : "application/json;charset=UTF-8",
+				statusCode: {
+					404: function() {
+						alert("404");
+					},
+					500: function() {
+						alert("500");
+					}
+				},
+				success: function(data, Status) {
+					location.reload();
+				}
+			});
+		}
+		
+		var flag_id=-1;
+		function repair(i) {
+			flag_id=-1;
+			//console.log(i);
+			flag_id=i
+			var zz = document.getElementById('zz');
+			var maintenanceLanding = document.getElementById('maintenanceLanding');
+			zz.style.display = "block";
+			maintenanceLanding.style.display = "block";
+		}
+		
+
+		window.onload = function() {
+			var flag = localStorage.getItem("flag");
+			if(flag != 0) {
+				var str = 1;
+				$.ajax({
+					type: "post",
+					url: "./getUnrepairedInformation",
+					data: {
+						key1: str
+					},
+					statusCode: {
+						404: function() {
+							alert("404");
+						},
+						500: function() {
+							alert("500");
+						}
+					},
+					success: function(data, Status) {
+						record=data;
+						var obj = eval(data);
+						for(var i = 0; i < obj.length; i++) {
+							document.getElementById('unRepairedTable').innerHTML += `
+									<tr id="label1">					
+									<td id="id${obj[i]["s_id"]}">${obj[i]["s_id"]}</td>
+									<td id="mid${obj[i]["s_id"]}">${obj[i]["s_mId"]}</td>
+									<td id="mType${obj[i]["s_id"]}">${obj[i]["s_mType"]}</td>
+									<td id="date${obj[i]["s_id"]}">${obj[i]["s_date"]}</td>
+									<td id="person${obj[i]["s_id"]}">${obj[i]["s_person"]}</td>
+									<td id="describe${obj[i]["s_id"]}">${obj[i]["s_describe"]}</td>
+									<td class="am-hide-sm-only" style="color: red;" id="status${obj[i]["s_id"]}">${obj[i]["s_status"]}</td>
+									<td class="am-hide-sm-only" id="acType${obj[i]["s_id"]}">${obj[i]["s_acType"]}</td>
+									<td  id="sendTo${obj[i]["s_id"]}">${obj[i]["s_sendTo"]}</td>
+									<td>
+										<div class="am-btn-toolbar">
+											<div class="am-btn-group am-btn-group-xs">
+												<a class="am-btn am-btn-default am-btn-xs am-text-secondary" style="color: green;" id="zt1" data-index="1" onclick="repair(${obj[i]["s_id"]})">维修</a>
+												<a class="am-btn am-btn-default am-btn-xs am-text-secondary"  id="ck${obj[i]["s_id"]}" data-index="1" onclick="lok_img(this.id)">查看图片</a>
+											</div>
+										</div>
+									</td>
+								</tr>`
+
+						}
+					}
+				});
+			}
+		}
+		function seeInformation(i) {
+			console.log(i.dataset.index);
+			$.ajax({
+				type: "post",
+				url: "./gethelp",
+				data: {
+					key:i.dataset.index
+				},
+
+				success: function (response) {
+					console.log(response);
+				}
+			});
+		}
+	</script>
+		
+
+</html>

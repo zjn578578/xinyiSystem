@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title></title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    
+    
+    <!-- CSS Files -->
+    <link href="css/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/assets/css/now-ui-kit.css?v=1.1.0" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    
+    <!-- Canonical SEO -->
+  	<script type="text/javascript" src="js/jquery.js"></script>
+    <script src="js/login.js"></script>
+    <script type="text/javascript" src="js/bootstrap-suggest.js"></script>
+</head>
+
+<body class="login-page sidebar-collapse" >
+    
+    <div class="page-header" >
+        <div class="page-header-image" style="background-image:url(css/assets/img/login1.jpg)"></div>
+        <div class="container">
+                     <img src="css/assets/img/xinyi2.png" width="1300px" height="550px" >   
+            <div class="col-md-4 content-center">
+                <div class="card card-login card-plain">               
+                        <div class="header header-primary text-center" style="height:150px">
+                                                                
+                        </div>
+                        <div class="content">
+                            <div class="input-group form-group-no-border input-lg">
+                                <span class="input-group-addon">
+                                    <i class="now-ui-icons users_circle-08"></i>
+                                </span>
+                                <input id="name" type="text" class="form-control" placeholder="账号" autocomplete="off">
+                            </div>
+                            <div class="input-group form-group-no-border input-lg">
+                                <span class="input-group-addon">
+                                    <i class="now-ui-icons text_caps-small"></i>
+                                </span>
+                                <input id="pass"type="password" placeholder="密码" class="form-control" autocomplete="off" />
+                            </div>
+                            <div class="input-group form-group-no-border input-lg">
+
+                            </div>
+                        </div>
+						<p>
+  				<div style="margin-bottom: 5px">
+                    <label><input id="remember" type="checkbox" style="margin-right: 3px">记住账号密码</label><br>
+                </div>
+
+                        <div class="footer text-center">  
+                         <button class="btn btn-primary btn-round btn-lg btn-block" id="login1" onclick="login()" >登录</button>
+                        </div>
+                        
+
+                </div>
+            </div>
+        </div>
+      
+    </div>
+</body>
+<script type="text/javascript">
+	document.onkeydown=function(e){
+		var ev = document.all?window.event:e;
+		if(ev.keyCode==13){
+ 			login(); 
+		}
+	}//原生js方法
+
+</script>
+
+<script>
+    window.onload = function(){
+        var oForm = document.getElementById('login1');
+        var oUser = document.getElementById('name');
+        var oPswd = document.getElementById('pass');
+        var oRemember = document.getElementById('remember');
+        //页面初始化时，如果帐号密码cookie存在则填充
+        if(getCookie('name') && getCookie('pass')){
+            oUser.value = getCookie('name');
+            oPswd.value = getCookie('pass');
+            oRemember.checked = true;
+        }
+        //复选框勾选状态发生改变时，如果未勾选则清除cookie
+        oRemember.onchange = function(){
+            if(!this.checked){
+                delCookie('name');
+                delCookie('pass');
+            }
+        };
+        //表单提交事件触发时，如果复选框是勾选状态则保存cookie
+        oForm.onsubmit = function(){
+            if(remember.checked){
+                setCookie('name',oUser.value,365*200); //保存帐号到cookie，有效期7天
+                setCookie('pass',oPswd.value,365*200); //保存密码到cookie，有效期7天
+            }
+        };
+    };
+    //设置cookie
+    function setCookie(name,value,day){
+        var date = new Date();
+        date.setDate(date.getDate() + day);
+        document.cookie = name + '=' + value + ';expires='+ date;
+    };
+    //获取cookie
+    function getCookie(name){
+        var reg = RegExp(name+'=([^;]+)');
+        var arr = document.cookie.match(reg);
+        if(arr){
+            return arr[1];
+        }else{
+            return '';
+        }
+    };
+    //删除cookie
+    function delCookie(name){
+        setCookie(name,null,-1);
+    };
+ 
+</script>
+
+
+</html>
