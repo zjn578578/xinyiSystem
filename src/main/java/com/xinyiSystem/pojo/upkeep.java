@@ -38,7 +38,15 @@ public class upkeep {
 	private String uSendto;
 	@Column(name = "uStatus")
 	private String uStatus;
+	@Column(name = "uRemark")
+	private String uRemark;
 	private String uPerson;
+	public String getuRemark() {
+		return uRemark;
+	}
+	public void setuRemark(String uRemark) {
+		this.uRemark = uRemark;
+	}
 	public String getuSendto() {
 		return uSendto;
 	}

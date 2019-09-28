@@ -30,7 +30,7 @@ function Initialize () {
 			let msg=eval(message);
 			if(msg.length==0){
 				msg=[ 
-				{"uCycle":"","uId":"","uItem":"","uMid":machine_mid1111,"uMtype":m}
+				{"uCycle":"","uId":"","uItem":"","uRemark":"","uMid":machine_mid1111,"uMtype":m}
 				]
 			}
 			console.log({msg});
@@ -65,7 +65,8 @@ function show_tabel(json){
 				field : 'uCycle',
 				title : '时间间隔(天)'
 			},{
-				
+				field : 'uRemark',
+				title : '备注'
 			}],
 			showColumns: true,
 			toolbar: '#toolbar',
@@ -141,7 +142,10 @@ function show_tabel(json){
             index: 0,
             row: {
             	uMid:machine_mid1111,
-            	uMtype:machine_type1111
+            	uMtype:machine_type1111,
+            	uItem:'',
+            	uRemark:'',
+            	uCycle:''
             }
         });
     });

@@ -575,6 +575,7 @@ public class PageController {
 						upkeep2.setuSendto(uSendto);
 						upkeep2.setuStatus("无需保养");
 						upkeep2.setuMmid(machine.getM_mid());
+						upkeep2.setuRemark(item1.getuRemark());
 						upkeepDAO.save(upkeep2);
 						upkeep1.remove(item1);
 
@@ -594,6 +595,7 @@ public class PageController {
 					upkeep3.setuStatus("无需保养");
 					upkeep3.setuSendto(uSendto);
 					upkeep3.setuMmid(machine.getM_mid());
+					upkeep3.setuRemark(upkeep1.get(i).getuRemark());
 					upkeepDAO.save(upkeep3);				
 				}
 			}
@@ -612,7 +614,6 @@ public class PageController {
 		Date date = new Date();
 		SimpleDateFormat dateFormat= new SimpleDateFormat("yyyy-MM-dd");
 		String nowdate = dateFormat.format(date);
-		
 		for(int i=0;i<upkeep.size();i++) {
 			String getuMid = upkeep.get(i).getuMid();
 			String m_send_to = machineDAO.findOne(Integer.parseInt(getuMid)).getM_send_to();
@@ -625,7 +626,8 @@ public class PageController {
 			upkeep1.setuStatus("无需保养");
 			upkeep1.setuMtype(upkeep.get(i).getuMtype());
 			upkeep1.setuMid(upkeep.get(i).getuMid());
-			upkeep1.setuMmid(machineDAO.findOne(Integer.parseInt(getuMid)).getM_mid());
+			upkeep1.setuMmid(machineDAO.findOne(Integer.parseInt(getuMid)).getM_mid());	
+			upkeep1.setuRemark(upkeep.get(i).getuRemark());
 			upkeepDAO.save(upkeep1);
 		}
 		return faultType;

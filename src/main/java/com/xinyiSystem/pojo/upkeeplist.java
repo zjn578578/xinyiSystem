@@ -30,7 +30,15 @@ public class upkeeplist {
 	@Column(name = "uDepartment")
 	private String uDepartment;
 	@Column(name = "uMid")
-	private String uMid;	
+	private String uMid;
+	@Column(name = "uRemark")
+	private String uRemark;	
+	public String getuRemark() {
+		return uRemark;
+	}
+	public void setuRemark(String uRemark) {
+		this.uRemark = uRemark;
+	}
 	public String getuItem() {
 		return uItem;
 	}

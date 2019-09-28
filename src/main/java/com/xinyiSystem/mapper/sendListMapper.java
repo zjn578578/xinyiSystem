@@ -46,7 +46,7 @@ public interface sendListMapper {
 	@Select("select * from sendlist where s_sendTo='${str}'  and s_status='需保养'")
 	public List<sendList> findMsg4ByPermission(@Param(value="str") String str);
 	
-	@Update("update sendlist set s_status='维修完成',s_finishdate='${s_finishdate}' where s_id=#{s_id}")
+	@Update("update sendlist set s_status='维修完成',s_listType='',s_finishdate='${s_finishdate}' where s_id=#{s_id}")
 	public void updatefaultreview(@Param(value="s_id")int s_id,@Param(value="s_finishdate")String s_finishdate);
 	
 	@Select("SELECT max(s_id) from xinyidatabase.sendlist")

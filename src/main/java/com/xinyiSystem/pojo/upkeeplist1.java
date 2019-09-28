@@ -11,6 +11,7 @@ private String uType;
 private String uSendto;
 private String uCycle;
 private String uDepartment;
+private String uRemark;
 public String getuDepartment() {
 	return uDepartment;
 }

@@ -276,6 +276,7 @@ public class sendListController {
 			upkeeplist1.setuSendto(upkeeplist.get(i).getuSendto());
 			upkeeplist1.setuUid(findOne.getM_mid());
 			upkeeplist1.setuType(findOne.getM_type());
+			upkeeplist1.setuRemark(upkeeplist.get(i).getuRemark());
 			upkeeplistDAO.save(upkeeplist1);
 		}
 		return "1";	
