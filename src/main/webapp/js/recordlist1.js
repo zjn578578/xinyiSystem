@@ -117,7 +117,7 @@ function search(msg,machine_conditions,input_msg){
 	let json1=[];
 	if(input_msg!="" && machine_conditions!="void"){
 		for(let i=0;i<msg.length;i++){
-			if(json[i][machine_conditions]==input_msg){
+			if(json[i][machine_conditions].indexOf(input_msg)!=-1){
 				json1.push(json[i]);
 			}
 		}

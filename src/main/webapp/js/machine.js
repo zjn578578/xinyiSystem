@@ -7,17 +7,14 @@ function Initialize(){
 		url: "./sendMachineMsg",      
 		success: function (data,Status) {
 			json=eval(data);
-			
-			json=json.sort((a,b)=> a.m_send_to-b.m_send_to);
-			console.log({json});	
-			let machine_factory=json[0]["m_send_to"];
-			document.getElementById("machine_factory").innerHTML+=`<option>${machine_factory}</option>`   //初始化厂区的信息
-				for(let i=1;i<json.length;i++){
-					if(machine_factory!=json[i]["m_send_to"]){
-						document.getElementById("machine_factory").innerHTML+=`<option>${json[i]["m_send_to"]}</option>`
-							machine_factory=json[i]['m_send_to'];
-					}
-				}
+			let machine_factory_set=new Set();
+			let machine_factory_array=json.forEach(e => {
+				let machine_facotry=e.m_send_to;
+				machine_factory_set.add(machine_facotry);
+			});
+			machine_factory_set.forEach(e =>{
+				document.getElementById("machine_factory").innerHTML+=`<option>${e}</option>`
+			})
 			$('#machine_factory').selectpicker('refresh');
 
 		}
@@ -111,18 +108,18 @@ function Initialize(){
 				<img src="" id="img">
 				</div> 
 		</div>`);   
-		
+
 		$("#machine_factory").attr("disabled","disabled");
 		$("#machine_floor").attr("disabled","disabled");
 		$("#machine_name").attr("disabled","disabled");
-		
-		
+
+
 		$('#machine_factory').selectpicker('refresh');
 		$('#machine_floor').selectpicker('refresh');
 		$('#machine_name').selectpicker('refresh');
 		$("#unlocked").removeAttr("disabled");
-		
-		
+
+
 		$('#add_photo_s').removeAttr('disabled');
 		let machine_id=mynode.id;
 		let machine_parent_id=parentnode.id;
@@ -172,7 +169,7 @@ function Initialize(){
 		});
 
 	});
-	
+
 	$("#unlocked").click(function(e){
 		$('#left-tree').treeview('enableAll', { silent: true });
 		$("#machine_factory").removeAttr("disabled");
@@ -182,65 +179,41 @@ function Initialize(){
 		$('#machine_floor').selectpicker('refresh');
 		$('#machine_name').selectpicker('refresh');
 		$('#photo_update').html(``);   
-	
+
 	})
-	
-	
-	
+
+
+
 }
 
 function changeFloor(machine_factory,json) {
-	json=json.sort((a,b)=> a.m_floor-b.m_floor);
-	let machine_floor="";
-	console.log(json);
-	for(let i=0;i<json.length;i++){
-		if(machine_factory==json[i]['m_send_to']){
-			if(machine_floor!=json[i]['m_floor']){
-				machine_floor=json[i]['m_floor'];
-				document.getElementById("machine_floor").innerHTML+=`<option>${json[i]["m_floor"]}</option>`
-			}
+	console.log(machine_factory);
+	let	machine_floor_set=new Set();
+	let machine_floor=json.forEach(e =>{
+		if(e.m_send_to==machine_factory){
+			machine_floor_set.add(e.m_floor);
 		}
-	}
+	})
+	machine_floor_set.forEach(e =>{
+		document.getElementById("machine_floor").innerHTML+=`<option>${e}</option>`
+	})
 	$('#machine_floor').selectpicker('refresh');
 }
 
 function changeMachineName(machine_factory,machine_floor,json){
-	console.log(machine_factory+" -- "+machine_floor);
-	let machine_name=[];
-	for(let i=0;i<json.length;i++){
-		if(json[i]['m_send_to']==machine_factory && json[i]['m_floor']==machine_floor){
-			if(machine_name.length==0){
-				let temp=json[i]['m_type'];
-				$('#machine_name').append(new Option(temp,temp));
-				machine_name.push(json[i]['m_type']);
-			}else{
-				let flag=false;
-				for(let j=0;j<machine_name.length;j++){
-					if(json[i]['m_type']==machine_name[j]){
-						flag=true;
-						break;
-					}
-				}
-				if(!flag){
-					let temp=json[i]['m_type'];
-					$('#machine_name').append(new Option(temp,temp));
-					machine_name.push(json[i]['m_type']);
-				}
-			}
+	console.log(machine_factory+"  "+machine_floor);
+	let machineName_set=new Set();
+	machineName=json.forEach(e =>{
+		if(e.m_send_to==machine_factory && e.m_floor==machine_floor){
+			machineName_set.add(e.m_type);
 		}
-	}
+	})
+	
+	machineName_set.forEach(e=>{
+		document.getElementById("machine_name").innerHTML+=`<option>${e}</option>`
+	})
 	$('#machine_name').selectpicker('refresh');
-//	let machine_name="";
-//	for(let i=0;i<json.length;i++){
-//		if(json[i]['m_send_to']==machine_factory && json[i]['m_floor']==machine_floor){		
-//			if(json[i]['m_type']!=machine_name){
-//				let temp=json[i]['m_type'];
-//				machine_name=json[i]['m_type'];
-//				$('#machine_name').append(new Option(temp,temp));
-//				$('#machine_name').selectpicker('refresh');
-//			}
-//		}
-//	}
+
 }
 
 function convertToTreeData(data, pid) {
