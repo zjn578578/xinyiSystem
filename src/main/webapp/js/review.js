@@ -12,8 +12,6 @@ function review() {
 			console.log({json});			
 			change_machine_place(json);
 			const_json=json;
-			
-			
 		}
 	});
 	
@@ -41,8 +39,8 @@ function review() {
 		$('#s_department').selectpicker('refresh');
 		$("#s_mId").find("option:not(:first)").remove();
 		$('#s_mId').selectpicker('refresh');	
-		change_machine_department(const_json);
-	//	change_machine_type(machine_place,const_json);
+		change_machine_department(machine_place,const_json);
+
 	});
 
 	$('#s_mType').change(function(e){
@@ -50,8 +48,6 @@ function review() {
 		let machine_type=$('#s_mType').val();
 		$("#s_mId").find("option:not(:first)").remove();
 		$('#s_mId').selectpicker('refresh');
-		
-		
 		change_machine_id(machine_place,machine_type,const_json);
 		let m_type=$('#s_mType').val();
 		let m_department=$('#s_department').val();
@@ -208,142 +204,57 @@ function show_my_data(machine_type,machine_department){
 
 
 function change_machine_place(json) {
-//	console.log({json});
-	let machine_place_arr=[];
-	for(let i=0;i<json.length;i++){
-		if(machine_place_arr.length==0){
-			machine_place_arr.push(json[i]['m_send_to']);
-			document.getElementById('s_send_to').innerHTML+=`<option>${json[i]['m_send_to']}</option>`
-		}else{
-			let machine_place=json[i]['m_send_to'];
-			let flag=false;
-			for(let j=0;j<machine_place_arr.length;j++){
-				if(machine_place==machine_place_arr[j]){
-					flag=true;
-					break;
-				}
-			}
-			if(!flag){
-			document.getElementById('s_send_to').innerHTML+=`<option>${machine_place}</option>`;
-			machine_place_arr.push(machine_place);
-			}
-		}
-	}
+	let machine_factory=new Set();
+	json.forEach(e =>{
+		machine_factory.add(e.m_send_to);
+	})
+	machine_factory.forEach(e =>{
+		document.getElementById('s_send_to').innerHTML+=`<option>${e}</option>` ;
+	})
+	
 	$('#s_send_to').selectpicker('refresh');
-//	let machine_place=json[0]["m_send_to"];
-//	document.getElementById('s_send_to').innerHTML+=`<option>${machine_place}</option>`
-//		for(let i=1;i<json.length;i++){
-//			if(json[i]['m_send_to']!=machine_place){
-//				document.getElementById('s_send_to').innerHTML+=`<option>${json[i]['m_send_to']}</option>`
-//					machine_place=json[i]['m_send_to'];
-//			}
-//		}
-//	$('#s_send_to').selectpicker('refresh');
+
 }
 
 
 function change_machine_type(place,json,department){
-	console.log({json});
-	console.log({place});
-//	console.log({json});
-//	for(let i=0;i<json.length;i++){
-//		if(json[i]['m_send_to']==place){
-//			if(json[i]['m_type']!=machine_type){
-//				console.log(json[i]['m_type']);
-//				document.getElementById('s_mType').innerHTML+=`<option>${json[i]['m_type']}</option>` ;
-//				machine_type=json[i]['m_type'];
-//			} 
-//		}
-//	}
-	let machine_type=[];
-	for(let i=0;i<json.length;i++){
-		if(json[i]['m_send_to']==place && json[i]['m_department']==department){
-			if(machine_type.length==0){
-				machine_type.push(json[i]['m_type']);
-				document.getElementById('s_mType').innerHTML+=`<option>${json[i]['m_type']}</option>` ;
-			}else{
-				let flag=false;
-				for(let j=0;j<machine_type.length;j++){
-					if(machine_type[j]==json[i]['m_type']){
-					    flag=true;
-						break;
-					}	
-				}
-				
-				if(!flag){
-					machine_type.push(json[i]['m_type']);
-					document.getElementById('s_mType').innerHTML+=`<option>${json[i]['m_type']}</option>` ;
-				}
-			}
+	let machine_type=new Set();
+	json.forEach(e =>{
+		if(e.m_send_to==place && e.m_floor==department){
+			machine_type.add(e.m_type);
 		}
-		
-//		if(machine_type.length==0){
-//			machine_type.push(json[i]['m_type']);
-//			document.getElementById('s_mType').innerHTML+=`<option>${json[i]['m_type']}</option>` ;
-//		}else{
-//			let flag=false;
-//			for(let j=0;j<machine_type.length;j++){
-//				if(machine_type[j]==json[i]['m_type']){
-//				    flag=true;
-//					break;
-//				}	
-//			}
-//			
-//			if(!flag){
-//				machine_type.push(json[i]['m_type']);
-//				document.getElementById('s_mType').innerHTML+=`<option>${json[i]['m_type']}</option>` ;
-//			}
-//		}
-	}
-	console.log({machine_type});
+	})
+	machine_type.forEach(e =>{
+		document.getElementById('s_mType').innerHTML+=`<option>${e}</option>` ;
+	})
+	
 	$('#s_mType').selectpicker('refresh');
 }
 
 function change_machine_id(machine_place,machine_type,json){
-	let machine_id="";
-	for(var i=0;i<json.length;i++){
-		if(json[i]['m_send_to']==machine_place && json[i]['m_type']==machine_type){
-			if(json[i]['m_mid']!=machine_id){
-				var temp=json[i]["m_mid"];
-				$("#s_mId").append(new Option(temp,temp));
-				machine_id=json[i]['m_mid'];
-			}
-		}	
-	}
+	let machine_id_set=new Set();
+	json.forEach(e =>{
+		if(e.m_send_to==machine_place && e.m_type==machine_type){
+			machine_id_set.add(e.m_mid);
+		}
+	})
+	machine_id_set.forEach(e =>{
+		document.getElementById('s_mId').innerHTML+=`<option>${e}</option>` ;
+	})
+	
 	$('#s_mId').selectpicker('refresh');
 }
 
-function change_machine_department(json){
-	
-	let department=[];
-	for(let i=0;i<json.length;i++){
-		
-		if(department.length==0){
-			let temp=json[i]["m_department"];
-			$("#s_department").append(new Option(temp,temp));
-			department.push(json[i]["m_department"]);
-			
-		}else{
-			let flag=false;
-			for(let j=0;j<department.length;j++){
-				if(department[j]==json[i]['m_department']){
-					flag=true;			
-					break;
-				}
-			}
-			if(!flag){
-				let temp=json[i]["m_department"];
-				$("#s_department").append(new Option(temp,temp));
-				department.push(json[i]["m_department"]);
-			}
-			
+function change_machine_department(place,json){
+	let machine_department=new Set();
+	json.forEach(e =>{
+		if(e.m_send_to==place){
+			machine_department.add(e.m_floor);
 		}
-		
-//		if(machine_department!=json[i]['m_department']){
-//			let temp=json[i]["m_department"];
-//			$("#s_department").append(new Option(temp,temp));
-//			machine_department=json[i]['m_department'];
-//		}
-	}
+	})
+	machine_department.forEach(e =>{
+		document.getElementById('s_department').innerHTML+=`<option>${e}</option>` ;
+	})
+	
 	$('#s_department').selectpicker('refresh');
 }
