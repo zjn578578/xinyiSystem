@@ -19,16 +19,15 @@ function Initialize () {
 			success : function(message, Status) {
 				let json=eval(message);
 				json=json.sort((a,b)=> a.m_send_to-b.m_send_to);
-				let permissions="";
-				for(let i=0;i<json.length;i++){
-					if(permissions!=json[i]['m_send_to']){
-						let temp=json[i]['m_send_to'];
-						machine_name=json[i]['m_send_to'];
-						$('#machine_place').append(new Option(temp,temp));
-						permissions=json[i]['m_send_to'];
-					}
-				}
-				
+
+				let machine_place_set=new Set();
+				json.forEach(e =>{
+					machine_place_set.add(e.m_send_to);
+				});
+				machine_place_set.forEach(e =>{
+					let temp=e;
+					$('#machine_place').append(new Option(temp,temp));
+				})
 			} 
 		});	
 		

@@ -46,9 +46,10 @@ function review() {
 	$('#s_mType').change(function(e){
 		let machine_place=$('#s_send_to').val();
 		let machine_type=$('#s_mType').val();
+		let machine_floor=$('#s_department').val();
 		$("#s_mId").find("option:not(:first)").remove();
 		$('#s_mId').selectpicker('refresh');
-		change_machine_id(machine_place,machine_type,const_json);
+		change_machine_id(machine_place,machine_type,const_json,machine_floor);
 		let m_type=$('#s_mType').val();
 		let m_department=$('#s_department').val();
 		show_my_data(m_type,m_department);
@@ -63,7 +64,11 @@ function review() {
 		let machine_department=$('#s_department').val();
 		let machine_place=$('#s_send_to').val();
 		change_machine_type(machine_place,const_json,machine_department);
-		show_my_data(machine_type,machine_department);
+	})
+	
+	$('#s_acType').change(function(e){
+		let s_acType=$('#s_acType').val();
+		$('#s_describe').val(s_acType);
 	})
 
 	var inputBox = document.getElementById("inputBox");
@@ -183,15 +188,27 @@ function show_my_data(machine_type,machine_department){
 				$('#s_acType').selectpicker('refresh');
 				let machine_type="";
 				let json=eval(massge);
-				console.log({json});
-				for(let i=0;i<json.length;i++){
-					let message=json[i]['fault_type'];
-					if(message.indexOf(machine_type1)!=-1 && message.indexOf(machine_department1)!=-1){
-						if(message!=machine_type){
-							document.getElementById('s_acType').innerHTML+=`<option>${message}</option>`
-						}
+//				console.log({json});
+				let machine_fault_set=new Set();
+//				for(let i=0;i<json.length;i++){
+//					let message=json[i]['fault_msg'];
+//					if(message.indexOf(machine_type1)!=-1){
+//						if(message!=machine_type){
+//							document.getElementById('s_acType').innerHTML+=`<option>${message}</option>`
+//						}
+//					}
+//				}
+				json.forEach(e =>{
+					machine_fault_set.add(e);
+				})
+				console.log({machine_fault_set});
+				machine_fault_set.forEach(e =>{
+					if(e.fault_msg.indexOf(machine_type1)!=-1){
+						let msg=e.fault_type+" : "+e.fault_msg;	
+						document.getElementById('s_acType').innerHTML+=`<option>${msg}</option>`
 					}
-				}
+				})
+				
 				$('#s_acType').selectpicker('refresh');		
 			} 
 		});
@@ -231,10 +248,10 @@ function change_machine_type(place,json,department){
 	$('#s_mType').selectpicker('refresh');
 }
 
-function change_machine_id(machine_place,machine_type,json){
+function change_machine_id(machine_place,machine_type,json,machine_floor){
 	let machine_id_set=new Set();
 	json.forEach(e =>{
-		if(e.m_send_to==machine_place && e.m_type==machine_type){
+		if(e.m_send_to==machine_place && e.m_type==machine_type && e.m_floor==machine_floor){
 			machine_id_set.add(e.m_mid);
 		}
 	})
