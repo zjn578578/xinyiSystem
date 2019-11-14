@@ -47,7 +47,7 @@ function login(){
        contentType : "application/json;charset=UTF-8",
        success: function(data,Status){
       	 if(data==1){
-				window.location.href="main.html";
+				window.location.href="zhuye.html";
 			}else if(data==2){
 				window.location.href="board.html"
 			}else if(data==3){
