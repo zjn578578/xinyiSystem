@@ -9,42 +9,26 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>信息查询</title>
-
-<!-- Bootstrap Core CSS -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
+<title></title>
 <script src="js/jquery.js"></script>
 <link rel="stylesheet" type="text/css"
 	href="css/bootstrap-select.min.css">
-<!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
 <script src="js/bootstrap-select.min.js"></script>
 <script src="js/bootstrap-table.min.js"></script>
 <script src="js/bootstrap-table-zh-CN.min.js"></script>
 <script src="js/bootstrap-treeview.min.js"></script>
-<!-- <script src="js/machine.js"></script> -->
-<!-- Custom CSS -->
-<link href="css/sb-admin.css" rel="stylesheet">
-<link rel="stylesheet" href="css/bootstrap-table.css">
-<link rel="stylesheet" href="css/bootstrap-treeview.min.css">
-<!-- Custom Fonts -->
-<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet"
-	type="text/css">
 
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 
-<style type="text/css">
-.aa {
-	background-color: #000;
-}
-</style>
 
-<style type="text/css">
+
+		<style type="text/css">
+			html,body{
+				width: 100%;
+				height: 100%;
+				padding: 0;
+				margin: 0;
+			}
 			.picking{
 				width: 80%;
 				height: 100%;
@@ -109,18 +93,14 @@
 <body>
 
 		
-		<div id="page-wrapper">
 
-			<div class="container-fluid">
 
-				<!-- Page Heading -->
-				<div class="row">
-					<div class="col-lg-12">
-						<h1 class="page-header">申请领料</h1>
 
-					</div>
+
+
+
 					
-				<div class="picking">
+		<div class="picking">
 		<div class="pickingInformation">
 			<h1>物品列表</h1>
 			<table id="pickingInformation_table" class="pickingInformation_table">
@@ -143,12 +123,12 @@
 				</tr>
 				<tr align=center>
 					<td>申请人姓名:</td>
-					<td colspan="4"><input type="text" value="" id="userName"/></td>
+					<td colspan="4"><input style="border: 0px;" type="text" value="" id="userName"/></td>
 					
 				</tr>
 				<tr align=center>
 					<td>领料日期:</td>
-					<td colspan="4"><input type="text" id="date_info" value=""/></td>
+					<td colspan="4"><input style="border: 0px;" type="text" id="date_info" value=""/></td>
 				</tr>
 				
 				<tr align=center>
@@ -163,9 +143,9 @@
 				</tr>
 				<tbody id="picking_table_tbody">
 				<tr align=center>
-					<td><input type="text"  value="" id="name1" onfocus="demo(1)" oninput="pickingInformation(1)"/></td>
+					<td><input type="text" style="border: 0px;" value="" id="name1" onfocus="demo(1)" oninput="pickingInformation(1)"/></td>
 					<td id="id1"></td>
-					<td><input type="text"  value="" id="num1"/></td>
+					<td><input type="text" style="border: 0px;" value="" id="num1"/></td>
 					<td id="unit1"></td>
 					<td><button onclick="Eliminate(this)" id="btn1" style="display: none; margin: 0 auto;">删除</button></td>
 				</tr>
@@ -180,13 +160,11 @@
 		</div>
 		
 		</div>	
-				</div>
-				<!-- /.row -->
 
-			</div>
-			<!-- /.container-fluid -->
-		</div>
-		<!-- /#page-wrapper -->
+
+
+
+
 
 	
 
@@ -307,9 +285,9 @@
 		 		tab_num_flag++;
 		 		var picking_table_tr=document.getElementById('picking_table_tbody');
 		 		var R=document.createElement('tr');
-		 		R.innerHTML+='<td><input type="text"  value="" id="name'+tab_num+'" onfocus="demo('+tab_num+')" oninput="pickingInformation('+tab_num+')"/></td>'+
+		 		R.innerHTML+='<td><input type="text" style="border: 0px;" value="" id="name'+tab_num+'" onfocus="demo('+tab_num+')" oninput="pickingInformation('+tab_num+')"/></td>'+
 					'<td id="id'+tab_num+'"></td>'+
-					'<td><input type="text" value="" id="num'+tab_num+'"/></td>'+
+					'<td><input type="text" style="border: 0px;" value="" id="num'+tab_num+'"/></td>'+
 					'<td id="unit'+tab_num+'"></td>'+
 					'<td><button onclick="Eliminate(this)" id="btn'+tab_num+'" style="display: none;margin: 0 auto;">删除</button></td>';
 				picking_table_tr.appendChild(R);
@@ -364,7 +342,6 @@
 					url: materialUrl+"Material/notify",//提交的接口
 					data: {
 						/*传值*/
-						baoxiu_id:msg[1],
 						user:userName,
 						Time:time,
 						materials:eval(infos)

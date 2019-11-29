@@ -77,6 +77,24 @@ public class PageController {
 		}
 	}
 
+	@RequestMapping("dengluxianshi")//用户页面获取信息
+	@ResponseBody
+	public String zhuye() {
+		Subject subject = SecurityUtils.getSubject();
+		if(subject.hasRole("admin")) {
+			return "1";
+		}
+		else if(subject.hasRole("chief")) {
+			return "2";
+		}
+		else if(subject.hasRole("monitor")) {
+			return "3";
+		}
+		else {
+			return "4";
+		}
+
+	}
 
 	@RequestMapping("login")//登入
 	public String login(@RequestBody admin admin) {
@@ -330,11 +348,11 @@ public class PageController {
 
 
 	@RequestMapping("main_machinestructureSend")//main_machinestructure界面初始信息显示
-	public String main_machinestructure(@RequestBody String msg) {
-		String substring = msg.substring(0,msg.length()-1);
-		String selectm_type = machineMapper.selectm_type(substring);
-		structureMapper.selectAllByM_type(selectm_type);
-		return JSON.toJSONString(structureMapper.selectAllByM_type(selectm_type));
+	public String main_machinestructure(@RequestBody object2 msg) {
+		//String substring = msg.substring(0,msg.length()-1);
+		//String selectm_type = machineMapper.selectm_type(substring);
+		List<structure> selectAllByM_type = structureMapper.selectAllByM_type(msg.getM_type());
+		return JSON.toJSONString(selectAllByM_type);
 	}
 
 	@RequestMapping("main_machinestructureDeleteSend")//main_machinestructure界面删除信息

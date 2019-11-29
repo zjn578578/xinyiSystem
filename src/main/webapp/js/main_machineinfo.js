@@ -207,7 +207,7 @@ function search(msg,machine_conditions,input_msg){
 	
 	if(machine_conditions=="选择编号"){
 		$("#e").attr("disabled", "disabled");
-		machine_conditions='m_id';	
+		machine_conditions='m_mid';	
 	}else if(machine_conditions=="选择机器类型"){
 		machine_conditions="m_class";
 		$("#b").attr("disabled", "disabled");
@@ -219,8 +219,7 @@ function search(msg,machine_conditions,input_msg){
 		$("#d").attr("disabled", "disabled");
 	}else if(machine_conditions=="选择机器名"){
 		machine_conditions="m_type";
-		$("#f").attr("disabled", "disabled");
-		
+		$("#f").attr("disabled", "disabled");		
 	}else if(machine_conditions=="选择部门"){
 		machine_conditions="m_department";
 		$("#c").attr("disabled", "disabled");

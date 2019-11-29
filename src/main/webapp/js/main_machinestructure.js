@@ -9,11 +9,13 @@ function Initialize () {
 	let msg1=msg[1];
     msg1=msg1.split("&");
     let m=decodeURI(msg1[0]);
-    console.log(m);
+   console.log(m);
+   console.log(msg[2]);
 	$.ajax({
 		type:"POST",
 		url:"./main_machinestructureSend",
-		data:msg[2],
+		contentType: 'application/json',
+		data:JSON.stringify({m_type:m}),
 		statusCode : {
 			404 : function() {
 				alert("404");
@@ -59,8 +61,39 @@ function show_tabel(json){
 				title : '构造'
 			},
 			{
+				field : 'photoname',
+				title : '查看图片'
+			},
+			{
 				field : 'operation',
-				title : '编辑该构造的零件',
+				title : '编辑该结构故障条目',
+				formatter : function(value, row, index) {
+					var s = '<button class="btn btn-info btn-sm edit"><span align>编辑该结构故障</span> </button>';
+					var fun = '';
+					return s;
+				},
+				events : {
+					// 操作列中编辑按钮的动作 
+					'click .edit' : function(e, value,
+							row, index) {
+						let machine_type=row.m_type;
+						let machine_id=row.m_id;
+						
+						json.push(machine_type);
+						console.log(row);
+						let index1=row.st_id;
+						let st_name=row.m_type+""+row.st_name;
+						console.log({st_name});
+						
+						let url=`main_machineparts.html?st_id=${index1}&m_type=${row.m_type}&st_name=${st_name}`;
+					
+						window.location.href=url;
+					},
+				}
+			},
+			{
+				field : 'operation1',
+				title : '编辑该结构的零件',
 				formatter : function(value, row, index) {
 					var s = '<button class="btn btn-info btn-sm edit"><span align>编辑该构造零件</span> </button>';
 					var fun = '';
@@ -82,8 +115,34 @@ function show_tabel(json){
 						let url=`main_machineparts.html?st_id=${index1}&m_type=${row.m_type}&st_name=${st_name}`;
 					
 						window.location.href=url;
-					}
-
+					},
+				}
+			},
+			{
+				field : 'operation2',
+				title : '提交该构造图片',
+				formatter : function(value, row, index) {
+					var s = ' <div class="form-group"><div class="col-md-8"><form action="imageUpload" method="post" enctype="multipart/form-data"><input type="file" name="inputBox" id="inputBox"  ></form><button>提交</button></div> </div>';
+					var fun = '';
+					return s;
+				},
+				events : {
+					// 操作列中编辑按钮的动作 
+					'click .edit' : function(e, value,
+							row, index) {
+						let machine_type=row.m_type;
+						let machine_id=row.m_id;
+						
+						json.push(machine_type);
+						console.log(row);
+						let index1=row.st_id;
+						let st_name=row.m_type+""+row.st_name;
+						console.log({st_name});
+						
+						let url=`main_machineparts.html?st_id=${index1}&m_type=${row.m_type}&st_name=${st_name}`;
+					
+						window.location.href=url;
+					},
 				}
 			}],
 			showColumns: true,
@@ -137,6 +196,7 @@ function show_tabel(json){
         $table.bootstrapTable('insertRow', {
             index: 0,
             row: {
+            	operation:'',
             	m_type:'',
             	st_name:'',
             	st_id:''
@@ -149,9 +209,8 @@ function show_tabel(json){
  $getTableData.click(function() {
 	 	console.log(machine_type);
 	   	var a =JSON.stringify($table.bootstrapTable('getSelections'));
-	   	let mydata=eval(a);
-	   
-	 
+	   	console.log(a);
+	   	let mydata=eval(a);	   	 
 	   	for(let i=0;i<mydata.length;i++){
 	   		if(mydata[i]['m_type']==""){
 	   			mydata[i]['m_type']=machine_type;
@@ -174,7 +233,7 @@ function show_tabel(json){
 			}
 		},success:function(data,Status){
 			alert("上传成功");
-			location.reload();
+			//location.reload();
 		}
 		});
 	 	

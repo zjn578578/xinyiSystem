@@ -20,7 +20,6 @@ function Initialize(){
 		}
 	})
 
-
 	$("#machine_factory").change(function (e) {    //厂区发生变化的时候触发
 		let machine_factory=$('#machine_factory').val();
 		$("#machine_floor").find("option:not(:first)").remove();
