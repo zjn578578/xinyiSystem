@@ -14,6 +14,9 @@ public interface structureMapper {
 	@Select("select *from xinyidatabase.structure where m_type='${m_type}'")
 	public List<structure> selectAllByM_type(@Param(value="m_type")String m_type);
 	
+	@Select("select st_name from xinyidatabase.structure where m_type='${m_type}'")
+	public List<structure> selectstnameByM_type(@Param(value="m_type")String m_type);
+	
 	@Update("update xinyidatabase.structure set photoname='${photoname}' where st_id='${st_id}' ")
 	public void updatephotoname(@Param(value="st_id")String st_id,@Param(value="photoname")String photoname);
 }
