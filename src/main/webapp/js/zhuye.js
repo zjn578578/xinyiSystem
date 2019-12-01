@@ -24,7 +24,7 @@
 							class="fa fa-fw fa-dashboard"></i> 纺机管理<i
 							class="fa fa-fw fa-caret-down"></i></a>
 						<ul id="demo" class="collapse">
-							<li><a href="main.html" target="iframe1">机器信息查询</a></li>
+							<li><a href="jiqi.html" target="iframe1">机器信息查询</a></li>
 							<li><a href="main_machineinfo.html" target="iframe1">机器管理</a></li>
 						</ul></li>
 
@@ -44,8 +44,6 @@
 							<li><a href="permissions.html" target="iframe1">权限分配</a></li>
 							<li><a href="updateuser.html"target="iframe1">权限管理</a></li>
 						</ul></li>
-					<li><a href="special-fault.html" target="iframe1"><i
-							class="fa fa-fw fa-table"></i> 故障库</a></li>
 					<li><a href="fault-review.html" target="iframe1"><i
 							class="fa fa-fw fa-desktop"></i> 故障审核</a></li>
 
@@ -78,7 +76,7 @@
 							class="fa fa-fw fa-dashboard"></i> 纺机管理<i
 							class="fa fa-fw fa-caret-down"></i></a>
 						<ul id="demo" class="collapse">
-							<li><a href="main.html" target="iframe1">机器信息查询</a></li>
+							<li><a href="jiqi.html" target="iframe1">机器信息查询</a></li>
 							<li><a href="main_machineinfo.html" target="iframe1">机器管理</a></li>
 						</ul></li>
 
@@ -90,9 +88,6 @@
 								<li><a href="recordlist1.html" target="iframe1">保养记录</a></li>
 								<li><a href="recordlist2.html"target="iframe1">领料记录</a></li>
 							</ul></li>
-
-						<li><a href="special-fault.html" target="iframe1"><i
-								class="fa fa-fw fa-table"></i> 故障库</a></li>
 						<li><a href="fault-review.html" target="iframe1"><i
 								class="fa fa-fw fa-desktop"></i> 故障审核</a></li>
 

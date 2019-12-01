@@ -15,7 +15,7 @@ function Initialize () {
     document.getElementById('place').innerHTML+=m;
 	$.ajax({
 		type:"POST",
-		url:"./main_machinepartsSend",
+		url:"./main_machineguzhangSend",
 		contentType: 'application/json',
 		data:JSON.stringify({m_type:m}),
 		statusCode : {
@@ -28,9 +28,9 @@ function Initialize () {
 		},
 		success : function(message, Status) {
 			let msg=eval(message);
-			if(msg.length==0){
+			if(msg==null){
 				msg=[
-					{mType:decodeURI(msg2[1]),stName:decodeURI(msg1[1]),pName:"",photoname:""}
+					{fault_machine:decodeURI(msg2[1]),fault_structure:decodeURI(msg1[1]),fault_id: 0,fault_type:"",fault_photo:"",fault_msg:""}
 				]
 			}
 
@@ -49,21 +49,25 @@ function show_tabel(json){
 	            checkbox: true
 	        },
 			{
-				field : 'pName',
-				title : '零件名'
+				field : 'fault_type',
+				title : '故障类型'
 			},
 			{
-				field : 'photoname',
+				field : 'fault_msg',
+				title : '故障解决方案',
+			},
+			{
+				field : 'fault_photo',
 				title : '故障图片',
 				formatter : function(value, row, index) {
-					var s = '<a  target="_blank" href="./guzhang/'+row.photoname+'">'+row.photoname+'</a>';
+					var s = '<a  target="_blank" href="./guzhang/'+row.fault_photo+'">'+row.fault_photo+'</a>';
 					return s;},
 			},
 			{
 				field : 'operation2',
 				title : '提交该故障图片',
 				formatter : function(value, row, index) {
-					var id=row.idParts;
+					var id=row.fault_id;
 					var s = '<input type="file" name="inputBox" id="inputBox'+id+'"><button id="sub">提交</button>';					
 					var fun = '';
 					return s;
@@ -72,20 +76,20 @@ function show_tabel(json){
 					// 操作列中编辑按钮的动作 
 					'click #sub' : function(e, value,
 							row, index) {	
-						let id=row.idParts;
+						let id=row.fault_id;
 						var img='#inputBox'+id;
 						var formdata=new FormData();
 						formdata.append('inputBox',$(img).get(0).files[0]);
 						$.ajax({
 							type: 'POST',
-							url: "./lingjianid",
+							url: "./guzhangid",
 							contentType: 'application/json',
 							data:{id},
 							success: function (data) {
 								$.ajax({
 									async: false,
 									type: 'POST',
-									url: "/imageUploadparts",
+									url: "/imageUploadguzhang",
 									dataType: 'json',
 									data: formdata,
 									contentType:false,//ajax上传图片需要添加
@@ -116,7 +120,7 @@ function show_tabel(json){
 			clickToSelect : true,
 			pagination : true,
 	        onClickCell: function(field, value, row, $element) {
-	        	if(field=='pName'){
+	        	if(field=='fault_type'||field=='fault_msg'){
 	            $element.attr('contenteditable', true);
 	        	}
 	            $element.blur(function() {
@@ -135,7 +139,7 @@ function show_tabel(json){
     	var ids =JSON.stringify($table.bootstrapTable('getSelections'));
 		$.ajax({
 			type:"post",
-			url:"./main_machinepartsDeleteSend",
+			url:"./main_machineguzhangDeleteSend",
 			data:ids,	
 			contentType: 'application/json',
 			statusCode:{
@@ -155,10 +159,11 @@ function show_tabel(json){
         $table.bootstrapTable('insertRow', {
             index: 0,
             row: {
-            	pName:'',
-            	photoname:'',
-            	mType:f_m,
-            	stName:f_s
+            	fault_type:'',
+            	fault_msg:'',
+            	fault_photo:'',
+            	fault_machine:f_m,
+            	fault_structure:f_s
             }
         });
     });
@@ -167,12 +172,11 @@ function show_tabel(json){
 
  $getTableData.click(function() {
 	   	var a =JSON.stringify($table.bootstrapTable('getSelections'));
-    	
-	   	let mydata=eval(a);	 
+	   	let mydata=eval(a);	   	 
 	    let data=JSON.stringify(mydata);
 	 	$.ajax({
 			type:"post",
-			url:"./main_machinepartsUpdateSend",
+			url:"./main_machineguzhangUpdateSend",
 			data:data,	
 			contentType: 'application/json',
 			statusCode:{

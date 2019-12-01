@@ -46,7 +46,7 @@ function Initialize(){
 			return ;
 		}
 		console.log({machine_name});
-		document.getElementById("wangye").innerHTML=`<iframe src="main_machinestructure.html?machine_type=${machine_name}&machine_id=123456" class="iframe1" name="iframe1"
+		document.getElementById("wangye").innerHTML=`<iframe src="main_machinestructure.html?machine_type=${machine_name}" class="iframe1" name="iframe1"
 		id="iframe1" width="70%" height="500px"> </iframe>`
 	});
 

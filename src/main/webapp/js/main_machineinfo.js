@@ -85,13 +85,13 @@ function show_tabel(json){
 				field : 'operation',
 				title : '编辑机器结构',
 				formatter : function(value, row, index) {
-					var s = '<button class="btn btn-info btn-sm edit"><span align>编辑机器结构</span> </button><button class="btn btn-info btn-sm edit" id="upkeep"><span align>编辑保养条目</span> </button>';
+					var s = '<button class="btn btn-info btn-sm edit" id="upkeep"><span align>编辑保养条目</span> </button>';
 					var fun = '';
 					return s;
 				},
 				events : {
 					// 操作列中编辑按钮的动作 
-					'click .edit' : function(e, value,row, index) {
+/*					'click .edit' : function(e, value,row, index) {
 						let machine_type=row.m_type;
 						let machine_id=row.m_id;
 						console.log({machine_id});
@@ -101,7 +101,7 @@ function show_tabel(json){
 						let url=`main_machinestructure.html?machine_type=${machine_type}&machine_id=${machine_id}`;
 						console.log(url);
 						window.location.href=url;
-					},
+					},*/
 					'click #upkeep':function(e, value,row, index){
 						let machine_type=row.m_type;
 						let machine_id=row.m_id;

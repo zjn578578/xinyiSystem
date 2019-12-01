@@ -25,19 +25,17 @@ import org.apache.shiro.subject.PrincipalCollection;
 import com.alibaba.fastjson.JSON;
 import com.xinyiSystem.mapper.*;
 import com.xinyiSystem.pojo.admin;
-import com.xinyiSystem.pojo.fault_database;
 import com.xinyiSystem.pojo.help;
 import com.xinyiSystem.pojo.machine;
 import com.xinyiSystem.pojo.object1;
 import com.xinyiSystem.pojo.permission1;
 import com.xinyiSystem.pojo.sendList;
-import com.xinyiSystem.pojo.specialFault;
-import com.xinyiSystem.pojo.specialFault1;
+import com.xinyiSystem.pojo.experts_database1;
+import com.xinyiSystem.pojo.experts_database;
 import com.xinyiSystem.pojo.treeMachine;
 import com.xinyiSystem.pojo.upkeep;
 import com.xinyiSystem.pojo.upkeep1;
 import com.xinyiSystem.pojo.upkeeplist;
-import com.xinyiSystem.util.FileUtils;
 import com.xinyiSystem.util.FileUtils;
 import com.xinyiSystem.service.*;
 import com.xinyiSystem.service.impl.*;
@@ -45,10 +43,9 @@ import com.xinyiSystem.service.impl.*;
 public class sendListController {
 	@Autowired sendListMapper sendListMapper;
 	@Autowired adminMapper adminMapper;
-	@Autowired fault_databaseDAO fault_databaseDAO;
 	@Autowired upkeepDAO upkeepDAO;
 	@Autowired upkeeplistDAO upkeeplistDAO;
-	@Autowired specialFaultMapping specialFaultMapping;
+	@Autowired expertsDatabaseMapping specialFaultMapping;
 	@Autowired machineDAO machineDAO;
 	String photoName;
 
@@ -199,26 +196,16 @@ public class sendListController {
 	}
 
 	
-	@RequestMapping("/gethelp")
-	@ResponseBody
-	public String gethelp(help help) {		
-		String msg=help.getKey();
-		List<fault_database> result=new LinkedList<>();
-		List<fault_database> findAll = fault_databaseDAO.findAll();
-		for(int i=0;i<findAll.size();i++) {
-			fault_database item=findAll.get(i);
-			String fault_type=item.getFault_type();
-			if(fault_type.equals(msg)) {
-				result.add(item);
-			}
-		}
-		String res=JSON.toJSONString(result);
-		
-		return res;
-		
-		
-	}
-		
+	/*
+	 * @RequestMapping("/gethelp")
+	 * 
+	 * @ResponseBody public String gethelp(help help) { String msg=help.getKey();
+	 * List<fault_database> result=new LinkedList<>(); List<fault_database> findAll
+	 * = fault_databaseDAO.findAll(); for(int i=0;i<findAll.size();i++) {
+	 * fault_database item=findAll.get(i); String fault_type=item.getFault_type();
+	 * if(fault_type.equals(msg)) { result.add(item); } } String
+	 * res=JSON.toJSONString(result); return res; }
+	 */
 	@RequestMapping("/updateupkeep")
 	@ResponseBody
 	public String updateupkeep(@RequestBody upkeep upkeep) {		
@@ -290,12 +277,16 @@ public class sendListController {
 		return "success";	
 	}
 	
-	@RequestMapping("getmachinefaulttype")
-	@ResponseBody
-	public String getmachinefaulttype() {
-		List<specialFault1> res = specialFaultMapping.findAllspecialFault();
-		return JSON.toJSONString(res);	
-	}
+	
+	/*
+	 * @RequestMapping("getmachinefaulttype")
+	 * 
+	 * @ResponseBody public String getmachinefaulttype() { List<specialFault1> res
+	 * =specialFaultMapping.findAllspecialFault();
+	 * 
+	 * return JSON.toJSONString(res); }
+	 */
+	
 	
 	
 	@RequestMapping("finishfix")
