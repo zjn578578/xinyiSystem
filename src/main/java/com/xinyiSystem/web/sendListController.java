@@ -25,19 +25,18 @@ import org.apache.shiro.subject.PrincipalCollection;
 import com.alibaba.fastjson.JSON;
 import com.xinyiSystem.mapper.*;
 import com.xinyiSystem.pojo.admin;
-import com.xinyiSystem.pojo.fault_database;
 import com.xinyiSystem.pojo.help;
 import com.xinyiSystem.pojo.machine;
 import com.xinyiSystem.pojo.object1;
 import com.xinyiSystem.pojo.permission1;
 import com.xinyiSystem.pojo.sendList;
-import com.xinyiSystem.pojo.specialFault;
-import com.xinyiSystem.pojo.specialFault1;
+import com.xinyiSystem.pojo.structure;
+import com.xinyiSystem.pojo.experts_database1;
+import com.xinyiSystem.pojo.experts_database;
 import com.xinyiSystem.pojo.treeMachine;
 import com.xinyiSystem.pojo.upkeep;
 import com.xinyiSystem.pojo.upkeep1;
 import com.xinyiSystem.pojo.upkeeplist;
-import com.xinyiSystem.util.FileUtils;
 import com.xinyiSystem.util.FileUtils;
 import com.xinyiSystem.service.*;
 import com.xinyiSystem.service.impl.*;
@@ -45,11 +44,13 @@ import com.xinyiSystem.service.impl.*;
 public class sendListController {
 	@Autowired sendListMapper sendListMapper;
 	@Autowired adminMapper adminMapper;
-	@Autowired fault_databaseDAO fault_databaseDAO;
 	@Autowired upkeepDAO upkeepDAO;
 	@Autowired upkeeplistDAO upkeeplistDAO;
-	@Autowired specialFaultMapping specialFaultMapping;
+	@Autowired expertsDatabaseMapping specialFaultMapping;
 	@Autowired machineDAO machineDAO;
+	@Autowired structureMapper structureMapper;
+	@Autowired
+	expertsDatabaseMapping expertsDatabaseMapping;
 	String photoName;
 
 	//故障报修
@@ -70,11 +71,6 @@ public class sendListController {
 
 		Map<String,Object> root=new HashMap<String, Object>();
 
-//		if (file.getSize() / 1000 > 1000){
-//			result_msg="图片大小不能超过1000KB";
-//		}
-//		else{
-			//判断上传文件格式
 			String fileType = file.getContentType();
 			/*
 			 * if (fileType.equals("image/jpeg") || fileType.equals("image/png") ||
@@ -84,7 +80,7 @@ public class sendListController {
 				//用src为保存绝对路径不能改名只能用原名，不用原名会导致ajax上传图片后在前端显示时出现404错误-->原因未知
 				//                String localPath="F:\\IDEAProject\\imageupload\\src\\main\\resources\\static\\img";
 				//final String localPath="C:\\Users\\楠哥\\eclipse-workspace\\xinyiSystem\\img";
-				final String localPath="C:\\Program Files (x86)\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
+				final String localPath="D:\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
 				//上传后保存的文件名(需要防止图片重名导致的文件覆盖)
 				//获取文件名
 				String fileName = file.getOriginalFilename();
@@ -102,11 +98,6 @@ public class sendListController {
 				else{
 					result_msg="图片上传失败";
 				}
-/*			}*/
-			/*
-			 * else{ result_msg="图片格式不正确"; }
-			 */
-	//	}
 
 		root.put("result_msg",result_msg);
 
@@ -199,26 +190,16 @@ public class sendListController {
 	}
 
 	
-	@RequestMapping("/gethelp")
-	@ResponseBody
-	public String gethelp(help help) {		
-		String msg=help.getKey();
-		List<fault_database> result=new LinkedList<>();
-		List<fault_database> findAll = fault_databaseDAO.findAll();
-		for(int i=0;i<findAll.size();i++) {
-			fault_database item=findAll.get(i);
-			String fault_type=item.getFault_type();
-			if(fault_type.equals(msg)) {
-				result.add(item);
-			}
-		}
-		String res=JSON.toJSONString(result);
-		
-		return res;
-		
-		
-	}
-		
+	/*
+	 * @RequestMapping("/gethelp")
+	 * 
+	 * @ResponseBody public String gethelp(help help) { String msg=help.getKey();
+	 * List<fault_database> result=new LinkedList<>(); List<fault_database> findAll
+	 * = fault_databaseDAO.findAll(); for(int i=0;i<findAll.size();i++) {
+	 * fault_database item=findAll.get(i); String fault_type=item.getFault_type();
+	 * if(fault_type.equals(msg)) { result.add(item); } } String
+	 * res=JSON.toJSONString(result); return res; }
+	 */
 	@RequestMapping("/updateupkeep")
 	@ResponseBody
 	public String updateupkeep(@RequestBody upkeep upkeep) {		
@@ -290,13 +271,20 @@ public class sendListController {
 		return "success";	
 	}
 	
-	@RequestMapping("getmachinefaulttype")
-	@ResponseBody
-	public String getmachinefaulttype() {
-		List<specialFault1> res = specialFaultMapping.findAllspecialFault();
-		return JSON.toJSONString(res);	
-	}
 	
+	
+	  @RequestMapping("getmachinefaulttype")//根据机器名得到结构名
+	  @ResponseBody public String getmachinestname(@RequestBody machine m_type) {		
+		List<structure> res = structureMapper.selectstnameByM_type(m_type.getM_type());	
+	  return JSON.toJSONString(res); 	  
+	  }
+	  
+	  @RequestMapping("getmachinestname")//根据机器名和结构名得到故障条目
+	  @ResponseBody public String getmachinefaulttype(@RequestBody experts_database msg) {
+		List<experts_database> res = expertsDatabaseMapping.selectBystnameAndmtype(msg.getFault_machine(),msg.getFault_structure()); 
+	  return JSON.toJSONString(res); 	  
+	  }
+	  
 	
 	@RequestMapping("finishfix")
 	@ResponseBody

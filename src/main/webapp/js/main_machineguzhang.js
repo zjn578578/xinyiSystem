@@ -1,16 +1,21 @@
-var machine_type="";
-
+let f_m="";
+let f_s="";
 function Initialize () {
 	let url=window.location.href;    
     let message=url.split("?");
     let msg=message[1];
-    msg=msg.split("=");
-	let msg1=msg[1];
-    msg1=msg1.split("&");
-    let m=decodeURI(msg1[0]);
+    msg=msg.split("&");
+	let msg1=msg[2];
+	let msg2=msg[1];
+    msg1=msg1.split("=");
+    msg2=msg2.split("=");
+    f_m=decodeURI(msg2[1]);
+    f_s=decodeURI(msg1[1]);
+    let m=decodeURI(msg2[1])+":"+decodeURI(msg1[1]);
+    document.getElementById('place').innerHTML+=m;
 	$.ajax({
 		type:"POST",
-		url:"./main_machinestructureSend",
+		url:"./main_machineguzhangSend",
 		contentType: 'application/json',
 		data:JSON.stringify({m_type:m}),
 		statusCode : {
@@ -23,20 +28,17 @@ function Initialize () {
 		},
 		success : function(message, Status) {
 			let msg=eval(message);
-		
-			if(msg.length==0){
+			if(msg==null){
 				msg=[
-					{st_name: "",m_type: m, st_id: 0,photoname:""}
+					{fault_machine:decodeURI(msg2[1]),fault_structure:decodeURI(msg1[1]),fault_id: 0,fault_type:"",fault_photo:"",fault_msg:""}
 				]
 			}
 
-			machine_type=msg[0]['m_type'];
 			show_tabel(msg);
-			document.getElementById('place').innerHTML+=machine_type;
+			
 		} 
 	});
 	// body... 
-
 	$("td,th").addClass("text-center");
 }
 
@@ -47,73 +49,25 @@ function show_tabel(json){
 	            checkbox: true
 	        },
 			{
-				field : 'st_name',
-				title : '构造'
+				field : 'fault_type',
+				title : '故障类型'
 			},
 			{
-				field : 'photoname',
-				title : '查看图片',
+				field : 'fault_msg',
+				title : '故障解决方案',
+			},
+			{
+				field : 'fault_photo',
+				title : '故障图片',
 				formatter : function(value, row, index) {
-					var s = '<a  target="_blank" href="./jiegou/'+row.photoname+'">'+row.photoname+'</a>';
+					var s = '<a  target="_blank" href="./guzhang/'+row.fault_photo+'">'+row.fault_photo+'</a>';
 					return s;},
 			},
 			{
-				field : 'operation',
-				title : '编辑该结构故障条目',
-				formatter : function(value, row, index) {
-					var s = '<button class="btn btn-info btn-sm edit"><span align>编辑该结构故障</span> </button>';
-					var fun = '';
-					return s;
-				},
-				events : {
-					// 操作列中编辑按钮的动作 
-					'click .edit' : function(e, value,
-							row, index) {
-						let machine_type=row.m_type;
-						let machine_id=row.m_id;
-						
-						json.push(machine_type);
-
-						let index1=row.st_id;
-						let st_name=row.st_name;
-						
-						let url=`main_machineguzhang.html?st_id=${index1}&m_type=${row.m_type}&st_name=${st_name}`;
-					
-						window.location.href=url;
-					},
-				}
-			},
-			{
-				field : 'operation1',
-				title : '编辑该结构的零件',
-				formatter : function(value, row, index) {
-					var s = '<button class="btn btn-info btn-sm edit"><span align>编辑该构造零件</span> </button>';
-					var fun = '';
-					return s;
-				},
-				events : {
-					// 操作列中编辑按钮的动作 
-					'click .edit' : function(e, value,
-							row, index) {
-						let machine_type=row.m_type;
-						let machine_id=row.m_id;
-						
-						json.push(machine_type);
-
-						let index1=row.st_id;
-						let st_name=row.st_name;
-						
-						let url=`main_machineparts.html?st_id=${index1}&m_type=${row.m_type}&st_name=${st_name}`;
-					
-						window.location.href=url;
-					},
-				}
-			},
-			{
 				field : 'operation2',
-				title : '提交该构造图片',
+				title : '提交该故障图片',
 				formatter : function(value, row, index) {
-					var id=row.st_id;
+					var id=row.fault_id;
 					var s = '<input type="file" name="inputBox" id="inputBox'+id+'"><button id="sub">提交</button>';					
 					var fun = '';
 					return s;
@@ -122,20 +76,20 @@ function show_tabel(json){
 					// 操作列中编辑按钮的动作 
 					'click #sub' : function(e, value,
 							row, index) {	
-						let st_id=row.st_id;
-						var img='#inputBox'+st_id;
+						let id=row.fault_id;
+						var img='#inputBox'+id;
 						var formdata=new FormData();
 						formdata.append('inputBox',$(img).get(0).files[0]);
 						$.ajax({
 							type: 'POST',
-							url: "./stid",
+							url: "./guzhangid",
 							contentType: 'application/json',
-							data:{st_id},
+							data:{id},
 							success: function (data) {
 								$.ajax({
 									async: false,
 									type: 'POST',
-									url: "/imageUploadjiegou",
+									url: "/imageUploadguzhang",
 									dataType: 'json',
 									data: formdata,
 									contentType:false,//ajax上传图片需要添加
@@ -166,7 +120,7 @@ function show_tabel(json){
 			clickToSelect : true,
 			pagination : true,
 	        onClickCell: function(field, value, row, $element) {
-	        	if(field=='st_name'){
+	        	if(field=='fault_type'||field=='fault_msg'){
 	            $element.attr('contenteditable', true);
 	        	}
 	            $element.blur(function() {
@@ -183,11 +137,9 @@ function show_tabel(json){
     
     $deleteTableData.click(function() {
     	var ids =JSON.stringify($table.bootstrapTable('getSelections'));
-    	var d = confirm("删除机器构造，同时也会删除该结构的故障条目和零件条目，您确认删除吗？");
-    	alert("删除成功");
 		$.ajax({
 			type:"post",
-			url:"./main_machinestructureDeleteSend",
+			url:"./main_machineguzhangDeleteSend",
 			data:ids,	
 			contentType: 'application/json',
 			statusCode:{
@@ -195,7 +147,7 @@ function show_tabel(json){
 				alert("404");
 			},
 			500:function(){
-				
+				alert("没有该结构");
 			}
 		},success:function(data,Status){
 			location.reload();
@@ -207,11 +159,11 @@ function show_tabel(json){
         $table.bootstrapTable('insertRow', {
             index: 0,
             row: {
-            	photoname:'',
-            	operation3:'',
-            	m_type:machine_type,
-            	st_name:'',
-            	st_id:''
+            	fault_type:'',
+            	fault_msg:'',
+            	fault_photo:'',
+            	fault_machine:f_m,
+            	fault_structure:f_s
             }
         });
     });
@@ -222,10 +174,9 @@ function show_tabel(json){
 	   	var a =JSON.stringify($table.bootstrapTable('getSelections'));
 	   	let mydata=eval(a);	   	 
 	    let data=JSON.stringify(mydata);
-	    console.log(data);
 	 	$.ajax({
 			type:"post",
-			url:"./main_machinestructureUpdateSend",
+			url:"./main_machineguzhangUpdateSend",
 			data:data,	
 			contentType: 'application/json',
 			statusCode:{
@@ -250,8 +201,12 @@ function show_tabel(json){
             value: value       //cell值
         });
     }
-    
     $('#refresh').click(function() {
 		location.reload();
     });
+    
+    $('#fanhui').click(function() {
+        window.history.go(-1);
+    });
+
 }

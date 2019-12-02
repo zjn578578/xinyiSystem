@@ -236,7 +236,7 @@
 	    console.log({message});   
 	    $('#myModal').modal('show');
 	    $('#fault_msg').html(cate_code_add);
-		$.ajax({
+/* 		$.ajax({
 			type: "post",
 			url: "./getSpecialPhoto.do",
 			data:{
@@ -259,14 +259,11 @@
 					document.getElementById('show_photo').innerHTML+=`<div><a href="./special/${json[i]['path']}" target="_blank">${json[i]['path']}</a></div>`
 				}
 			} 
-		});
+		}) */;
 	    
 	}).on("onUnsetSelectValue",function(e) {
 	    cate_code_add = '';
 	});
-	
-	
-
 		function lok_img(id) {
 			console.log();
 			var img_box = document.getElementById('img_box');
@@ -395,7 +392,7 @@
 				});
 			}
 		}
-		function seeInformation(i) {
+/*  		function seeInformation(i) {
 			console.log(i.dataset.index);
 			$.ajax({
 				type: "post",
@@ -408,7 +405,7 @@
 					console.log(response);
 				}
 			});
-		}
+		}  */
 	</script>
 		
 

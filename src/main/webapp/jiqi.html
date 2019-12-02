@@ -9,7 +9,7 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<title>材料领取</title>
+<title></title>
 
 <!-- Bootstrap Core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -22,7 +22,7 @@
 <script src="js/bootstrap-table.min.js"></script>
 <script src="js/bootstrap-table-zh-CN.min.js"></script>
 <script src="js/bootstrap-treeview.min.js"></script>
-<script src="js/machine.js"></script>
+<script src="js/jiqi.js"></script>
 <!-- Custom CSS -->
 <link href="css/sb-admin.css" rel="stylesheet">
 <link rel="stylesheet" href="css/bootstrap-table.css">
@@ -48,11 +48,8 @@
 
 <body>
 
-	<div id="wrapper">
 
 		<!-- Navigation -->
-		
-
 		<div id="page-wrapper">
 
 			<div class="container-fluid">
@@ -60,18 +57,53 @@
 				<!-- Page Heading -->
 				<div class="row">
 					<div class="col-lg-12">
-						<h1 class="page-header">没有权限</h1>
+						<h1 class="page-header">机器信息查询</h1>
 
 					</div>
 				</div>
+				<!-- /.row -->
+				<div class="row">
+					<h3 id="fault_title">
+						<span class="label label-default">当前位置:</span>
+					</h3>
+				</div>
+				<div style="padding: 10px"></div>
+				<div class="row">
+					<select class="selectpicker" id="machine_factory">
+						<option>选择厂区信息</option>
+					</select> <select class="selectpicker" id="machine_floor">
+						<option>选择楼层</option>
+					</select> <select class="selectpicker" id="machine_name"
+						data-live-search="true">
+						<option>选择机器名称</option>
+					</select>
+					<button class="btn" id="btn_search">提交查询</button>
+
+				</div>
+
+				<div style="padding: 30px"></div>			
+				<div id="wangye">
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div id="left-tree"></div>
+					</div>
+					<div class="col-md-6" id="photo_update"></div>
+
+				</div>
+				<div style="padding: 10px"></div>
+			</div>
+			<!-- /.container-fluid -->
 
 		</div>
 		<!-- /#page-wrapper -->
 
-	</div>
 	<!-- /#wrapper -->
+	<script type="text/javascript">
+		Initialize();
+	</script>
 	<!-- jQuery -->
-</div>
+
 </body>
 
 </html>

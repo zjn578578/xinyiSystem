@@ -20,6 +20,14 @@ private String stName;
 private String pName;
 @Column(name = "mType")
 private String mType;
+@Column(name = "photoname")
+private String photoname;
+public String getPhotoname() {
+	return photoname;
+}
+public void setPhotoname(String photoname) {
+	this.photoname = photoname;
+}
 public int getIdParts() {
 	return idParts;
 }

@@ -37,8 +37,11 @@ import com.xinyiSystem.mapper.*;
 public class PageController {
 	String machine_msg_id;
 	String faultType;
+	String strid;
+	String guzhangID;
+	String lingjianid;
 	@Autowired
-	specialFaultMapping specialFaultMapping;
+	expertsDatabaseMapping expertsDatabaseMapping;
 	@Autowired
 	photoMapper photoMapper;
 	@Autowired
@@ -60,12 +63,9 @@ public class PageController {
 	@Autowired
 	partsDAO partsDAO;
 	@Autowired
-	expertsPhotoDAO expertsPhotoDAO;
-	@Autowired
 	upkeepDAO upkeepDAO;
 	@Autowired
 	upkeeplistDAO upkeeplistDAO;
-	
 
 	@Controller//主页面重定向
 	public class IndexController {
@@ -77,6 +77,24 @@ public class PageController {
 		}
 	}
 
+	@RequestMapping("dengluxianshi")//用户页面获取信息
+	@ResponseBody
+	public String zhuye() {
+		Subject subject = SecurityUtils.getSubject();
+		if(subject.hasRole("admin")) {
+			return "1";
+		}
+		else if(subject.hasRole("chief")) {
+			return "2";
+		}
+		else if(subject.hasRole("monitor")) {
+			return "3";
+		}
+		else {
+			return "4";
+		}
+
+	}
 
 	@RequestMapping("login")//登入
 	public String login(@RequestBody admin admin) {
@@ -249,10 +267,16 @@ public class PageController {
 	 */
 
 
-	@RequestMapping("sendMachineMsg")//main界面纺机初始信息显示
+	@RequestMapping("sendMachineMsg")//jiqi界面纺机初始信息显示
 	public String sendMachineMsg() {
 		List<machine1> selectInfo = machineMapper.selectInfo();
-		String jsonString = JSON.toJSONString(selectInfo);		
+		for (int i = 0; i < selectInfo.size(); i++) {
+			if(selectInfo.get(i).getM_floor()==null) {
+				selectInfo.get(i).setM_floor("");
+			}
+		}
+		String jsonString = JSON.toJSONString(selectInfo);
+		System.out.println(jsonString);
 		return jsonString;		
 	}
 
@@ -330,18 +354,27 @@ public class PageController {
 
 
 	@RequestMapping("main_machinestructureSend")//main_machinestructure界面初始信息显示
-	public String main_machinestructure(@RequestBody String msg) {
-		String substring = msg.substring(0,msg.length()-1);
-		String selectm_type = machineMapper.selectm_type(substring);
-		structureMapper.selectAllByM_type(selectm_type);
-		return JSON.toJSONString(structureMapper.selectAllByM_type(selectm_type));
+	public String main_machinestructure(@RequestBody object2 msg) {
+		//String substring = msg.substring(0,msg.length()-1);
+		//String selectm_type = machineMapper.selectm_type(substring);
+		List<structure> selectAllByM_type = structureMapper.selectAllByM_type(msg.getM_type());
+		for (int i = 0; i < selectAllByM_type.size(); i++) {
+			if(selectAllByM_type.get(i).getPhotoname()==null) {
+				selectAllByM_type.get(i).setPhotoname("");
+			}
+		}
+		return JSON.toJSONString(selectAllByM_type);
 	}
 
 	@RequestMapping("main_machinestructureDeleteSend")//main_machinestructure界面删除信息
 	public String main_machinestructureDeleteSend(@RequestBody List<structure> structure) {
 		for(int i=0;i<structure.size();i++) {
 			structure res=structure.get(i);
+			String st_name = structure.get(i).getSt_name();	
+			String m_type = structure.get(i).getM_type();
 			structureDAO.delete(res.getSt_id());
+			expertsDatabaseMapping.delete1(m_type,st_name);
+			partsMapper.delete1(m_type, st_name);
 		}
 		return "1";
 	}
@@ -349,32 +382,6 @@ public class PageController {
 	@RequestMapping("main_machinestructureUpdateSend")//main_machinestructure界面提交信息
 	public int main_machinestructureUpdateSend(@RequestBody List<structure> structure) {
 		structureDAO.save(structure);
-		return 1;
-	}
-
-	@RequestMapping("/main_machinepartsSend")//main_machineparts界面初始信息显示
-	public String main_machinepartsSend(@RequestBody int msg) {
-		
-		structure findOne = structureDAO.findOne(msg);
-		String st_name = findOne.getSt_name();
-		List<parts> findByStName = partsDAO.findByStName(st_name);
-		JSON.toJSONString(findByStName);		
-		return JSON.toJSONString(findByStName);	
-	}
-
-	@RequestMapping("main_machinepartsDeleteSend")//main_machineparts界面删除信息
-	public String main_machinepartsDeleteSend(@RequestBody List<parts> parts) {
-		for(int i=0;i<parts.size();i++) {
-			parts res=parts.get(i);
-			partsDAO.delete(res.getIdParts());
-		}
-		return "1";
-	}
-
-	@RequestMapping("main_machinepartsUpdateSend")//main_machineparts界面提交信息
-	public int main_machinepartsUpdateSend(@RequestBody List<parts> parts) {
-
-		partsDAO.save(parts);
 		return 1;
 	}
 
@@ -386,7 +393,7 @@ public class PageController {
 	}
 
 
-	@RequestMapping("/sendList1")
+	@RequestMapping("/sendList1")//找到目前最大的单号
 	@ResponseBody
 	public String getPhotoName(treeMachine msg) {
 		String machine_msg=msg.getMachine_id()+"-"+msg.getMachine_parent_id();		
@@ -394,7 +401,31 @@ public class PageController {
 		return "aa";
 
 	}
-	@RequestMapping("/imageUpload1")
+	
+	@RequestMapping("/stid")//找到机器结构的ID
+	@ResponseBody
+	public String stid(@RequestBody String stid) {
+		strid=stid.substring(6,stid.length());
+		return null;
+	}
+	
+	@RequestMapping("/guzhangid")//找到机器结构的ID
+	@ResponseBody
+	public String guzhangid(@RequestBody String ID) {
+		String ID1 = ID.substring(3,ID.length());
+		guzhangID=ID1;
+		return null;
+	}
+	
+	@RequestMapping("/lingjianid")//找到机器结构的ID
+	@ResponseBody
+	public String lingjianid(@RequestBody String ID) {
+		String ID1 = ID.substring(3,ID.length());
+		lingjianid=ID1;
+		return null;
+	}
+	
+	@RequestMapping("/imageUpload1")//树结构的图片上传，待删。
 	@ResponseBody
 	public String imageUpload1(@RequestParam("inputBox") MultipartFile file) {
 		String result_msg="";//上传结果信息
@@ -405,7 +436,7 @@ public class PageController {
 		//用src为保存绝对路径不能改名只能用原名，不用原名会导致ajax上传图片后在前端显示时出现404错误-->原因未知
 		//                String localPath="F:\\IDEAProject\\imageupload\\src\\main\\resources\\static\\img";
 	//final String localPath="C:\\Users\\楠哥\\eclipse-workspace\\xinyiSystem\\src\\main\\webapp\\img"; 
-		final String localPath="C:\\Program Files (x86)\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
+		final String localPath="D:\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
 		
 		//上传后保存的文件名(需要防止图片重名导致的文件覆盖)
 		//获取文件名
@@ -461,6 +492,11 @@ public class PageController {
 	@ResponseBody
 	public String getmachineinfo() {
 		List<machine> findAll = machineDAO.findAll();
+		for (int i = 0; i < findAll.size(); i++) {
+			if(findAll.get(i).getM_floor()==null) {
+				findAll.get(i).setM_floor("");
+			}		
+		}
 		String res=JSON.toJSONString(findAll);
 		return res;
 
@@ -478,61 +514,24 @@ public class PageController {
 
 	}
 
-	@RequestMapping("/updatefaultmessage")
-	@ResponseBody
-	public String updatefaultmessage(specialFault msg) {
-		specialFaultMapping.save(msg);
-		return "提交成功";
+	/*
+	 * @RequestMapping("/updatefaultmessage")
+	 * 
+	 * @ResponseBody public String updatefaultmessage(experts_database msg) {
+	 * expertsDatabaseMapping.save(msg); return "提交成功";
+	 * 
+	 * }
+	 */
+	/*
+	 * @RequestMapping("/findfaultidbytype")
+	 * 
+	 * @ResponseBody public String findfaultidbytype(experts_database msg) {
+	 * faultType=msg.getType(); return "aa";
+	 * 
+	 * }
+	 */
 
-	}
-	@RequestMapping("/findfaultidbytype")
-	@ResponseBody
-	public String  findfaultidbytype(specialFault msg) {
-		faultType=msg.getType();
-		return "aa";
-
-	}
-
-	@RequestMapping("/specialimageupload")
-	@ResponseBody
-	public String specialimageupload(@RequestParam("inputBox") MultipartFile file) {
-		String result_msg="";//上传结果信息
-		Map<String,Object> root=new HashMap<String, Object>();
-		//判断上传文件格式
-		String fileType = file.getContentType();
-		// 要上传的目标文件存放的绝对路径
-		//用src为保存绝对路径不能改名只能用原名，不用原名会导致ajax上传图片后在前端显示时出现404错误-->原因未知
-		//                String localPath="F:\\IDEAProject\\imageupload\\src\\main\\resources\\static\\img";
-		//final String localPath="C:\\Users\\楠哥\\eclipse-workspace\\xinyiSystem\\src\\main\\webapp\\special";
-		final String localPath="C:\\Program Files (x86)\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\special";
-		//上传后保存的文件名(需要防止图片重名导致的文件覆盖)
-		//获取文件名
-		String fileName = file.getOriginalFilename();
-		if (FileUtils.upload(file, localPath, fileName)) {
-			//文件存放的相对路径(一般存放在数据库用于img标签的src)
-			String relativePath="img/"+fileName;
-			root.put("relativePath",relativePath);
-			expertsPhoto item=new expertsPhoto();
-			item.setFaultType(faultType);
-			item.setPath(fileName);
-			expertsPhotoDAO.save(item);//前端根据是否存在该字段来判断上传是否成功
-			result_msg="图片上传成功";
-
-
-		}
-		else{
-			result_msg="图片上传失败";
-		}
-
-		root.put("result_msg",result_msg);
-
-		//        JSON.toJSONString(root,SerializerFeature.DisableCircularReferenceDetect);
-		String root_json=JSON.toJSONString(root);
-		return root_json;
-
-	}
-
-
+	
 
 	@RequestMapping("/upkeepinfo")//保养条目初始信息
 	@ResponseBody
@@ -675,23 +674,25 @@ public class PageController {
 		return JSON.toJSONString(upkeeplistDAO.findAllByOrderByUIdDesc()); 
 	}
 	
-	@RequestMapping("getdatatest")
-	@ResponseBody
-	public String getdatatest() {
-		List<specialFault1> res = specialFaultMapping.findAllspecialFault();
-		Map map=new HashMap<>();
-		map.put("value", res);
-		return JSON.toJSONString(map);
-		
-	}
+	/*
+	 * @RequestMapping("getdatatest")
+	 * 
+	 * @ResponseBody public String getdatatest() { List<specialFault1> res =
+	 * expertsDatabaseMapping.findAllspecialFault(); Map map=new HashMap<>();
+	 * map.put("value", res); return JSON.toJSONString(map);
+	 * 
+	 * }
+	 */
 	
-	@RequestMapping("getSpecialPhoto")
-	@ResponseBody
-	public String getSpecialPhoto(specialFault msg) {
-		List<expertsPhoto> res = expertsPhotoDAO.findByFaultType(msg.getType());
-		return JSON.toJSONString(res);
-		
-	}
+	/*
+	 * @RequestMapping("getSpecialPhoto")
+	 * 
+	 * @ResponseBody public String getSpecialPhoto(experts_database msg) {
+	 * List<expertsPhoto> res = expertsPhotoDAO.findByFaultType(msg.getType());
+	 * return JSON.toJSONString(res);
+	 * 
+	 * }
+	 */
 	
 	@RequestMapping("getmachineplacemsg")
 	@ResponseBody
@@ -707,9 +708,142 @@ public class PageController {
 		return null;
 	}
 	
+	//新的结构图片上传
+		@RequestMapping("/imageUploadjiegou")
+		public String imageUpload(@RequestParam("inputBox") MultipartFile file){
+			String result_msg="";//上传结果信息
+			Map<String,Object> root=new HashMap<String, Object>();
+				String fileType = file.getContentType();
+					//final String localPath="F:\\test";					
+					final String localPath="D:\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\jiegou";
+					String fileName = file.getOriginalFilename();
+					structureMapper.updatephotoname(strid, fileName);
+					if (FileUtils.upload(file, localPath, fileName)) {
+						String relativePath="img/"+fileName;	
+						System.out.println(relativePath);
+						root.put("relativePath",relativePath);//前端根据是否存在该字段来判断上传是否成功
+						result_msg="图片上传成功";
+					}
+					else{
+						result_msg="图片上传失败";
+					}
+			root.put("result_msg",result_msg);
+			String root_json=JSON.toJSONString(root);
+			return root_json;
+		}
 	
-	
-	
+		@RequestMapping("/main_machineguzhangSend")
+		public String main_machineguzhangSend(@RequestBody machine msg){
+			String m_type = msg.getM_type();
+			String[] splitAddress=m_type.split(":");
+			String string = splitAddress[0];
+			String string2 = splitAddress[1];
+			List<experts_database> selectAllByMsg = expertsDatabaseMapping.selectAllByMsg(string, string2);
+			if(selectAllByMsg.size()==0) {
+				return null;
+			}
+			else
+				for (int i = 0; i <selectAllByMsg.size(); i++) {
+					if(selectAllByMsg.get(i).getFault_photo()==null) {
+						selectAllByMsg.get(i).setFault_photo("");
+					}
+				}
+				return JSON.toJSONString(selectAllByMsg);
+		}
+		
+		@RequestMapping("/main_machineguzhangUpdateSend")
+		public String main_machineguzhangUpdateSend(@RequestBody List<experts_database> a){
+			for(int i=0;i<a.size();i++) {
+				experts_database res=a.get(i);
+				if(res.getFault_id()==0) { 
+					expertsDatabaseMapping.insert(res);
+				}
+				expertsDatabaseMapping.update(res.getFault_id(), res.getFault_machine(), res.getFault_structure(), res.getFault_type(),res.getFault_msg()); 
+			}	
+			return "1";
+		}
+		
+		@RequestMapping("main_machineguzhangDeleteSend")//main_machinestructure界面删除信息
+		public String main_machineguzhangDeleteSend(@RequestBody List<experts_database> experts_database) {
+						for(int i=0;i<experts_database.size();i++) {
+				experts_database res=experts_database.get(i);
+				expertsDatabaseMapping.delete(res.getFault_id());
+			}
+			return "1";
+		}
+		
+		//故障库图片上传
+				@RequestMapping("/imageUploadguzhang")
+				public String imageUploadguzhang(@RequestParam("inputBox") MultipartFile file){
+					String result_msg="";//上传结果信息
+					Map<String,Object> root=new HashMap<String, Object>();
+						String fileType = file.getContentType();
+							//final String localPath="F:\\guzhang";					
+							final String localPath="D:\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\guzhang";
+							String fileName = file.getOriginalFilename();
+							expertsDatabaseMapping.updatephotoname(guzhangID, fileName);
+							if (FileUtils.upload(file, localPath, fileName)) {
+								String relativePath="img/"+fileName;	
+								System.out.println(relativePath);
+								root.put("relativePath",relativePath);//前端根据是否存在该字段来判断上传是否成功
+								result_msg="图片上传成功";
+							}
+							else{
+								result_msg="图片上传失败";
+							}
+					root.put("result_msg",result_msg);
+					String root_json=JSON.toJSONString(root);
+					return root_json;
+				}
+				
+				@RequestMapping("/main_machinepartsSend")//零件界面初始信息显示
+				public String main_machinepartsSend(@RequestBody machine msg) {
+					String m_type = msg.getM_type();
+					String[] splitAddress=m_type.split(":");
+					String string = splitAddress[0];
+					String string2 = splitAddress[1];
+					List<parts> res = partsDAO.findByMTypeAndStName(string, string2);
 
-
+					return JSON.toJSONString(res);				
+					
+				}
+				@RequestMapping("main_machinepartsUpdateSend")//main_machineparts界面提交信息
+				public int main_machinepartsUpdateSend(@RequestBody List<parts> parts) {
+					partsDAO.save(parts);
+					return 1;
+				}
+				
+				@RequestMapping("main_machinepartsDeleteSend")//main_machineparts界面删除信息
+				public String main_machinepartsDeleteSend(@RequestBody List<parts> parts) {
+					for(int i=0;i<parts.size();i++) {
+						parts res=parts.get(i);
+						partsDAO.delete(res.getIdParts());
+					}
+					return "1";
+				}
+				
+				//零件图片上传
+				@RequestMapping("/imageUploadparts")
+				public String imageUploadparts(@RequestParam("inputBox") MultipartFile file){
+					String result_msg="";//上传结果信息
+					Map<String,Object> root=new HashMap<String, Object>();
+						String fileType = file.getContentType();
+							//final String localPath="F:\\lingjian";					
+							final String localPath="D:\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\lingjian";
+							String fileName = file.getOriginalFilename();
+							partsMapper.update(lingjianid,fileName);
+							if (FileUtils.upload(file, localPath, fileName)) {
+								String relativePath="img/"+fileName;	
+								System.out.println(relativePath);
+								root.put("relativePath",relativePath);//前端根据是否存在该字段来判断上传是否成功
+								result_msg="图片上传成功";
+							}
+							else{
+								result_msg="图片上传失败";
+							}
+					root.put("result_msg",result_msg);
+					String root_json=JSON.toJSONString(root);
+					return root_json;
+				}
+				
 }

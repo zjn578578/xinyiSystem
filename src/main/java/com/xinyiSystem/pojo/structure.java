@@ -19,6 +19,14 @@ private int st_id;
 private String m_type;
 @Column(name = "st_name")
 private String st_name;
+@Column(name = "photoname")
+private String photoname;
+public String getPhotoname() {
+	return photoname;
+}
+public void setPhotoname(String photoname) {
+	this.photoname = photoname;
+}
 public String getM_type() {
 	return m_type;
 }

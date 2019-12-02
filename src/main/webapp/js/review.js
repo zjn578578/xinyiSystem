@@ -55,6 +55,13 @@ function review() {
 		show_my_data(m_type,m_department);
 	});
 	
+	$('#s_acType').change(function(e){
+		let st_name=$('#s_acType').val();
+		//$('#s_describe').val(s_acType);
+		let m_type=$('#s_mType').val();
+		show_my_data1(m_type,st_name);
+	});
+	
 	$('#s_department').change(function(e){
 		$("#s_mType").find("option:not(:first)").remove();
 		$('#s_mType').selectpicker('refresh');
@@ -66,10 +73,7 @@ function review() {
 		change_machine_type(machine_place,const_json,machine_department);
 	})
 	
-	$('#s_acType').change(function(e){
-		let s_acType=$('#s_acType').val();
-		$('#s_describe').val(s_acType);
-	})
+
 
 	var inputBox = document.getElementById("inputBox");
 	var img = document.getElementById("img");
@@ -93,12 +97,13 @@ function review() {
 		var s_listType=$("#s_listType").val();
 		var s_person=$("#s_person").val();
 		var s_acType=$("#s_acType").val();
+		var s_acType1=$("#s_acType1").val();
 		var s_describe=$("#s_describe").val();
 		var s_picture=img.src;
 		if(s_mId=="机台ID"){
 			s_mId="";
 		}
-		if(s_acType=='其他'&&s_describe==''){
+		if(s_acType=='其他'||s_acType1=='其他'&&s_describe==''){
 			alert("请填写故障描述");
 			return;
 		}
@@ -111,7 +116,7 @@ function review() {
 				"s_class":s_class,
 				"s_listType":s_listType,
 				"s_person":s_person,
-				"s_acType":s_acType,
+				"s_acType":s_acType+" "+s_acType1,
 				"s_describe":s_describe,
 		};
 		console.log(paramas);
@@ -158,7 +163,7 @@ function review() {
 
 
 }
-
+//故障部位展示
 function show_my_data(machine_type,machine_department){
 	console.log({machine_type});
 	console.log({machine_department});
@@ -167,9 +172,8 @@ function show_my_data(machine_type,machine_department){
 		$.ajax({
 			type:"POST",
 			url:"./getmachinefaulttype.do",
-			data:{
-				key:"test"
-			},
+			contentType:'application/json;charset=UTF-8',
+			data:JSON.stringify({m_type:machine_type}),
 			statusCode : {
 				404 : function() {
 					alert("404");
@@ -179,37 +183,57 @@ function show_my_data(machine_type,machine_department){
 				}
 			},
 			success : function(massge, Status) {
-				let machine_type1=$('#s_mType').val();
-				let machine_department1=$('#s_department').val();
-				console.log({machine_type1});
-				console.log({machine_department1});
-				
+				let machine_type1=$('#s_mType').val();			
+				let machine_department1=$('#s_department').val();		
 				$('#s_acType').html(`<option>其他</option>`);
 				$('#s_acType').selectpicker('refresh');
 				let machine_type="";
 				let json=eval(massge);
-//				console.log({json});
 				let machine_fault_set=new Set();
-//				for(let i=0;i<json.length;i++){
-//					let message=json[i]['fault_msg'];
-//					if(message.indexOf(machine_type1)!=-1){
-//						if(message!=machine_type){
-//							document.getElementById('s_acType').innerHTML+=`<option>${message}</option>`
-//						}
-//					}
-//				}
 				json.forEach(e =>{
 					machine_fault_set.add(e);
 				})
-				console.log({machine_fault_set});
-				machine_fault_set.forEach(e =>{
-					if(e.fault_msg.indexOf(machine_type1)!=-1){
-						let msg=e.fault_type+" : "+e.fault_msg;	
-						document.getElementById('s_acType').innerHTML+=`<option>${msg}</option>`
-					}
-				})
+				machine_fault_set.forEach(e =>{				
+						let msg=e.st_name;	
+						document.getElementById('s_acType').innerHTML+=`<option>${msg}</option>`					
+				})				
+				$('#s_acType').selectpicker('refresh');	
 				
-				$('#s_acType').selectpicker('refresh');		
+			} 
+		});		
+	}
+}
+//故障类型展示
+function show_my_data1(m_type,st_name){ 
+	if(m_type!="请选择机器类型" && st_name!="其他"){
+		$('#s_acType1').removeAttr("disabled");	
+		$.ajax({
+			type:"POST",
+			url:"./getmachinestname.do",
+			contentType:'application/json;charset=UTF-8',
+			data:JSON.stringify({fault_machine:m_type,fault_structure:st_name}),
+			statusCode : {
+				404 : function() {
+					alert("404");
+				},
+				500 : function() {
+					alert("500");
+				}
+			},
+			success : function(massge, Status) {	
+				$('#s_acType1').html(`<option>其他</option>`);
+				$('#s_acType1').selectpicker('refresh');
+				let json=eval(massge);
+				console.log(json);
+				let machine_fault_set=new Set();
+				json.forEach(e =>{
+					machine_fault_set.add(e);
+				})
+				machine_fault_set.forEach(e =>{				
+						let msg=e.fault_type;	
+						document.getElementById('s_acType1').innerHTML+=`<option>${msg}</option>`					
+				})				
+				$('#s_acType1').selectpicker('refresh');		
 			} 
 		});
 

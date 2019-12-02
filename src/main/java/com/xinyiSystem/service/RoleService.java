@@ -9,4 +9,5 @@ import com.xinyiSystem.pojo.admin;
 
 public interface RoleService {
 	public Set<String> listRoleNames(String userName);
+	
 }
