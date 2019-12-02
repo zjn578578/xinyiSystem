@@ -276,7 +276,6 @@ public class PageController {
 			}
 		}
 		String jsonString = JSON.toJSONString(selectInfo);
-		System.out.println(jsonString);
 		return jsonString;		
 	}
 
@@ -334,6 +333,14 @@ public class PageController {
 	@RequestMapping("main_machineinfoSend")//main_machineinfo界面初始信息显示
 	public String main_machineinfo() {
 		List<machine> selectAll = machineMapper.selectAll();
+		for (int i = 0; i < selectAll.size(); i++) {
+			if(selectAll.get(i).getM_floor()==null){
+				selectAll.get(i).setM_floor("");
+			}
+			if(selectAll.get(i).getM_department()==null){
+				selectAll.get(i).setM_department("");
+			}
+		}
 		return JSON.toJSONString(selectAll)	;
 	}
 
