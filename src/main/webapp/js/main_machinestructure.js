@@ -54,7 +54,7 @@ function show_tabel(json){
 				field : 'photoname',
 				title : '查看图片',
 				formatter : function(value, row, index) {
-					var s = '<a  target="_blank" href="./str/'+row.photoname+'">'+row.photoname+'</a>';
+					var s = '<a  target="_blank" href="./jiegou/'+row.photoname+'">'+row.photoname+'</a>';
 					return s;},
 			},
 			{
@@ -142,7 +142,7 @@ function show_tabel(json){
 									processData:false,//ajax上传图片需要添加
 									success: function (data) {
 										alert("图片上传成功");
-										//location.reload();
+										location.reload();
 									},
 									error: function (e) {
 									}

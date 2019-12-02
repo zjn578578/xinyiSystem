@@ -56,7 +56,7 @@ function show_tabel(json){
 				field : 'photoname',
 				title : '故障图片',
 				formatter : function(value, row, index) {
-					var s = '<a  target="_blank" href="./guzhang/'+row.photoname+'">'+row.photoname+'</a>';
+					var s = '<a  target="_blank" href="./lingjian/'+row.photoname+'">'+row.photoname+'</a>';
 					return s;},
 			},
 			{

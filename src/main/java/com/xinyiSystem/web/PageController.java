@@ -436,7 +436,7 @@ public class PageController {
 		//用src为保存绝对路径不能改名只能用原名，不用原名会导致ajax上传图片后在前端显示时出现404错误-->原因未知
 		//                String localPath="F:\\IDEAProject\\imageupload\\src\\main\\resources\\static\\img";
 	//final String localPath="C:\\Users\\楠哥\\eclipse-workspace\\xinyiSystem\\src\\main\\webapp\\img"; 
-		final String localPath="C:\\Program Files (x86)\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
+		final String localPath="D:\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
 		
 		//上传后保存的文件名(需要防止图片重名导致的文件覆盖)
 		//获取文件名
@@ -708,14 +708,14 @@ public class PageController {
 		return null;
 	}
 	
-	//新的故障结构图片上传
+	//新的结构图片上传
 		@RequestMapping("/imageUploadjiegou")
 		public String imageUpload(@RequestParam("inputBox") MultipartFile file){
 			String result_msg="";//上传结果信息
 			Map<String,Object> root=new HashMap<String, Object>();
 				String fileType = file.getContentType();
-					final String localPath="F:\\test";					
-					//final String localPath="C:\\Program Files (x86)\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
+					//final String localPath="F:\\test";					
+					final String localPath="D:\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\jiegou";
 					String fileName = file.getOriginalFilename();
 					structureMapper.updatephotoname(strid, fileName);
 					if (FileUtils.upload(file, localPath, fileName)) {
@@ -778,8 +778,8 @@ public class PageController {
 					String result_msg="";//上传结果信息
 					Map<String,Object> root=new HashMap<String, Object>();
 						String fileType = file.getContentType();
-							final String localPath="F:\\guzhang";					
-							//final String localPath="C:\\Program Files (x86)\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
+							//final String localPath="F:\\guzhang";					
+							final String localPath="D:\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\guzhang";
 							String fileName = file.getOriginalFilename();
 							expertsDatabaseMapping.updatephotoname(guzhangID, fileName);
 							if (FileUtils.upload(file, localPath, fileName)) {
@@ -822,14 +822,14 @@ public class PageController {
 					return "1";
 				}
 				
-				//故障库图片上传
+				//零件图片上传
 				@RequestMapping("/imageUploadparts")
 				public String imageUploadparts(@RequestParam("inputBox") MultipartFile file){
 					String result_msg="";//上传结果信息
 					Map<String,Object> root=new HashMap<String, Object>();
 						String fileType = file.getContentType();
-							final String localPath="F:\\lingjian";					
-							//final String localPath="C:\\Program Files (x86)\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
+							//final String localPath="F:\\lingjian";					
+							final String localPath="D:\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\lingjian";
 							String fileName = file.getOriginalFilename();
 							partsMapper.update(lingjianid,fileName);
 							if (FileUtils.upload(file, localPath, fileName)) {

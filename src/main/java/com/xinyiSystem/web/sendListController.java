@@ -71,11 +71,6 @@ public class sendListController {
 
 		Map<String,Object> root=new HashMap<String, Object>();
 
-//		if (file.getSize() / 1000 > 1000){
-//			result_msg="图片大小不能超过1000KB";
-//		}
-//		else{
-			//判断上传文件格式
 			String fileType = file.getContentType();
 			/*
 			 * if (fileType.equals("image/jpeg") || fileType.equals("image/png") ||
@@ -85,7 +80,7 @@ public class sendListController {
 				//用src为保存绝对路径不能改名只能用原名，不用原名会导致ajax上传图片后在前端显示时出现404错误-->原因未知
 				//                String localPath="F:\\IDEAProject\\imageupload\\src\\main\\resources\\static\\img";
 				//final String localPath="C:\\Users\\楠哥\\eclipse-workspace\\xinyiSystem\\img";
-				final String localPath="C:\\Program Files (x86)\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
+				final String localPath="D:\\Apache Software Foundation\\Tomcat 9.0\\webapps\\ROOT\\img";
 				//上传后保存的文件名(需要防止图片重名导致的文件覆盖)
 				//获取文件名
 				String fileName = file.getOriginalFilename();
@@ -103,11 +98,6 @@ public class sendListController {
 				else{
 					result_msg="图片上传失败";
 				}
-/*			}*/
-			/*
-			 * else{ result_msg="图片格式不正确"; }
-			 */
-	//	}
 
 		root.put("result_msg",result_msg);
 
@@ -282,17 +272,16 @@ public class sendListController {
 	}
 	
 	
-
-	  @RequestMapping("getmachinestname")//根据机器名得到结构名
-	  @ResponseBody public String getmachinestname(@RequestBody machine m_type) { 		
-		List<structure> res = structureMapper.selectstnameByM_type(m_type.getM_type());	  
+	
+	  @RequestMapping("getmachinefaulttype")//根据机器名得到结构名
+	  @ResponseBody public String getmachinestname(@RequestBody machine m_type) {		
+		List<structure> res = structureMapper.selectstnameByM_type(m_type.getM_type());	
 	  return JSON.toJSONString(res); 	  
 	  }
 	  
-	  @RequestMapping("getmachinefaulttype")//根据机器名和结构名得到故障条目
-	  @ResponseBody public String getmachinefaulttype(@RequestBody structure msg) {
-		  
-		List<experts_database> res = expertsDatabaseMapping.selectBystnameAndmtype(msg.getM_type(), msg.getSt_name()); 
+	  @RequestMapping("getmachinestname")//根据机器名和结构名得到故障条目
+	  @ResponseBody public String getmachinefaulttype(@RequestBody experts_database msg) {
+		List<experts_database> res = expertsDatabaseMapping.selectBystnameAndmtype(msg.getFault_machine(),msg.getFault_structure()); 
 	  return JSON.toJSONString(res); 	  
 	  }
 	  
