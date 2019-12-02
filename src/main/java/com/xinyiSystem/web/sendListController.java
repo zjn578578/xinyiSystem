@@ -30,6 +30,7 @@ import com.xinyiSystem.pojo.machine;
 import com.xinyiSystem.pojo.object1;
 import com.xinyiSystem.pojo.permission1;
 import com.xinyiSystem.pojo.sendList;
+import com.xinyiSystem.pojo.structure;
 import com.xinyiSystem.pojo.experts_database1;
 import com.xinyiSystem.pojo.experts_database;
 import com.xinyiSystem.pojo.treeMachine;
@@ -47,6 +48,9 @@ public class sendListController {
 	@Autowired upkeeplistDAO upkeeplistDAO;
 	@Autowired expertsDatabaseMapping specialFaultMapping;
 	@Autowired machineDAO machineDAO;
+	@Autowired structureMapper structureMapper;
+	@Autowired
+	expertsDatabaseMapping expertsDatabaseMapping;
 	String photoName;
 
 	//故障报修
@@ -278,16 +282,20 @@ public class sendListController {
 	}
 	
 	
-	
-	  @RequestMapping("getmachinefaulttype")
-	  
-	  @ResponseBody public String getmachinefaulttype() { 	  
-		  
-	  return null;
+
+	  @RequestMapping("getmachinestname")//根据机器名得到结构名
+	  @ResponseBody public String getmachinestname(@RequestBody machine m_type) { 		
+		List<structure> res = structureMapper.selectstnameByM_type(m_type.getM_type());	  
+	  return JSON.toJSONString(res); 	  
 	  }
-	 
-	
-	
+	  
+	  @RequestMapping("getmachinefaulttype")//根据机器名和结构名得到故障条目
+	  @ResponseBody public String getmachinefaulttype(@RequestBody structure msg) {
+		  
+		List<experts_database> res = expertsDatabaseMapping.selectBystnameAndmtype(msg.getM_type(), msg.getSt_name()); 
+	  return JSON.toJSONString(res); 	  
+	  }
+	  
 	
 	@RequestMapping("finishfix")
 	@ResponseBody

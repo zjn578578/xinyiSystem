@@ -29,4 +29,9 @@ public interface expertsDatabaseMapping {
 
 	@Update("update xinyidatabase.experts_database set fault_photo='${fault_photo}' where fault_id='${fault_id}' ")
 	public void updatephotoname(@Param(value="fault_id")String fault_id,@Param(value="fault_photo")String fault_photo);
+
+	@Select("select fault_type from xinyidatabase.experts_database where fault_machine='${fault_machine}' and fault_structure='${fault_structure}'")
+	public List<experts_database> selectBystnameAndmtype(@Param(value="fault_machine")String fault_machine,@Param(value="fault_structure")String fault_structure);
+
+
 }
