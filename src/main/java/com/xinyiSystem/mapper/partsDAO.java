@@ -12,4 +12,5 @@ public interface partsDAO extends JpaRepository<parts, Integer>{
 	public List<parts> findByStName(String name);
 	public List<parts> findBymType(String name);
 	public List<parts> findByMTypeAndStName(String mtype,String stname);
+	public void deleteByMTypeAndStName(String mtype,String stname);
 }

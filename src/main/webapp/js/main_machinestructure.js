@@ -18,7 +18,7 @@ function Initialize () {
 				alert("404");
 			},
 			500 : function() {
-				alert("没有选择");
+				alert("请先编辑机器结构");
 			}
 		},
 		success : function(message, Status) {
@@ -41,11 +41,6 @@ function Initialize () {
 }
 
 function show_tabel(json){
-	
-	let long=machine_type.length;
-	for(let i=0;i<json.length;i++){
-		json[i]['st_name']=json[i]['st_name'].substr(long,json[i]['st_name'].length-long);
-	}
 	$('#permissions_table').bootstrapTable({
 		columns : [
 			{
@@ -188,6 +183,8 @@ function show_tabel(json){
     
     $deleteTableData.click(function() {
     	var ids =JSON.stringify($table.bootstrapTable('getSelections'));
+    	var d = confirm("删除机器构造，同时也会删除该结构的故障条目和零件条目，您确认删除吗？");
+    	alert("删除成功");
 		$.ajax({
 			type:"post",
 			url:"./main_machinestructureDeleteSend",
@@ -198,7 +195,7 @@ function show_tabel(json){
 				alert("404");
 			},
 			500:function(){
-				alert("没有该结构");
+				
 			}
 		},success:function(data,Status){
 			location.reload();
@@ -212,7 +209,7 @@ function show_tabel(json){
             row: {
             	photoname:'',
             	operation3:'',
-            	m_type:'',
+            	m_type:machine_type,
             	st_name:'',
             	st_id:''
             }
@@ -224,14 +221,8 @@ function show_tabel(json){
  $getTableData.click(function() {
 	   	var a =JSON.stringify($table.bootstrapTable('getSelections'));
 	   	let mydata=eval(a);	   	 
-	   	for(let i=0;i<mydata.length;i++){
-	   		if(mydata[i]['m_type']==""){
-	   			mydata[i]['m_type']=machine_type;
-	   		}
-	   		mydata[i]['st_name']=machine_type+""+mydata[i]['st_name'];
-	   	}
-
 	    let data=JSON.stringify(mydata);
+	    console.log(data);
 	 	$.ajax({
 			type:"post",
 			url:"./main_machinestructureUpdateSend",
@@ -259,4 +250,8 @@ function show_tabel(json){
             value: value       //cell值
         });
     }
+    
+    $('#refresh').click(function() {
+		location.reload();
+    });
 }

@@ -358,6 +358,11 @@ public class PageController {
 		//String substring = msg.substring(0,msg.length()-1);
 		//String selectm_type = machineMapper.selectm_type(substring);
 		List<structure> selectAllByM_type = structureMapper.selectAllByM_type(msg.getM_type());
+		for (int i = 0; i < selectAllByM_type.size(); i++) {
+			if(selectAllByM_type.get(i).getPhotoname()==null) {
+				selectAllByM_type.get(i).setPhotoname("");
+			}
+		}
 		return JSON.toJSONString(selectAllByM_type);
 	}
 
@@ -369,6 +374,7 @@ public class PageController {
 			String m_type = structure.get(i).getM_type();
 			structureDAO.delete(res.getSt_id());
 			expertsDatabaseMapping.delete1(m_type,st_name);
+			partsMapper.delete1(m_type, st_name);
 		}
 		return "1";
 	}

@@ -23,7 +23,7 @@ function Initialize () {
 				alert("404");
 			},
 			500 : function() {
-				alert("没有选择");
+				alert("请先编辑机器结构");
 			}
 		},
 		success : function(message, Status) {
@@ -197,4 +197,11 @@ function show_tabel(json){
             value: value       //cell值
         });
     }
+    $('#refresh').click(function() {
+		location.reload();
+    });
+    
+    $('#fanhui').click(function() {
+        window.history.go(-1);
+    });
 }

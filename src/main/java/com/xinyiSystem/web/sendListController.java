@@ -278,14 +278,14 @@ public class sendListController {
 	}
 	
 	
-	/*
-	 * @RequestMapping("getmachinefaulttype")
-	 * 
-	 * @ResponseBody public String getmachinefaulttype() { List<specialFault1> res
-	 * =specialFaultMapping.findAllspecialFault();
-	 * 
-	 * return JSON.toJSONString(res); }
-	 */
+	
+	  @RequestMapping("getmachinefaulttype")
+	  
+	  @ResponseBody public String getmachinefaulttype() { 	  
+		  
+	  return null;
+	  }
+	 
 	
 	
 	

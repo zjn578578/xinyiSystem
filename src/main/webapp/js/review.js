@@ -180,35 +180,21 @@ function show_my_data(machine_type,machine_department){
 			},
 			success : function(massge, Status) {
 				let machine_type1=$('#s_mType').val();
-				let machine_department1=$('#s_department').val();
-				console.log({machine_type1});
-				console.log({machine_department1});
-				
+				let machine_department1=$('#s_department').val();		
 				$('#s_acType').html(`<option>其他</option>`);
 				$('#s_acType').selectpicker('refresh');
 				let machine_type="";
 				let json=eval(massge);
-//				console.log({json});
 				let machine_fault_set=new Set();
-//				for(let i=0;i<json.length;i++){
-//					let message=json[i]['fault_msg'];
-//					if(message.indexOf(machine_type1)!=-1){
-//						if(message!=machine_type){
-//							document.getElementById('s_acType').innerHTML+=`<option>${message}</option>`
-//						}
-//					}
-//				}
 				json.forEach(e =>{
 					machine_fault_set.add(e);
 				})
-				console.log({machine_fault_set});
 				machine_fault_set.forEach(e =>{
 					if(e.fault_msg.indexOf(machine_type1)!=-1){
 						let msg=e.fault_type+" : "+e.fault_msg;	
 						document.getElementById('s_acType').innerHTML+=`<option>${msg}</option>`
 					}
-				})
-				
+				})				
 				$('#s_acType').selectpicker('refresh');		
 			} 
 		});

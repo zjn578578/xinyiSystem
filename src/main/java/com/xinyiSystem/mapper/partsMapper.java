@@ -2,6 +2,7 @@ package com.xinyiSystem.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -19,4 +20,6 @@ public interface partsMapper {
 	@Update("update xinyidatabase.parts set photoname='${photoname}' where id_parts = '${id_parts}'")
 	public void update(@Param(value="id_parts")String lingjianid,@Param(value="photoname")String photoname);
 	
+	@Delete("delete from  xinyidatabase.parts where m_type=#{m_type} and st_name =#{st_name}")
+	public void delete1(@Param(value="m_type")String m_type,@Param(value="st_name")String st_name);
 }
