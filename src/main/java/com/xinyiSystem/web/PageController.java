@@ -537,7 +537,22 @@ public class PageController {
 	 * 
 	 * }
 	 */
-
+		@RequestMapping("/gethelp")
+		@ResponseBody
+		public String getHelp(faulthelp help) {
+			String[] reStrings=new String[2];
+			if(help.getFault_type()!="其他") {
+				reStrings=help.getFault_type().split(" ");
+			}else {
+				return null;
+			}
+			System.out.println(help.getMachine_type()+reStrings[0]+reStrings[1]);
+			List<experts_database> res=expertsDatabaseMapping.selectBystnameAndmtype1(help.getMachine_type(), reStrings[0], reStrings[1]);
+			System.out.println(res.size());
+			return JSON.toJSONString(res);
+			
+			
+		}
 	
 
 	@RequestMapping("/upkeepinfo")//保养条目初始信息

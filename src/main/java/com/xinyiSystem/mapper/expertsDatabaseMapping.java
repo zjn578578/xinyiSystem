@@ -32,6 +32,8 @@ public interface expertsDatabaseMapping {
 
 	@Select("select distinct fault_type from xinyidatabase.experts_database where fault_machine='${fault_machine}' and fault_structure='${fault_structure}'")
 	public List<experts_database> selectBystnameAndmtype(@Param(value="fault_machine")String fault_machine,@Param(value="fault_structure")String fault_structure);
-
+	
+	@Select("select * from xinyidatabase.experts_database where fault_machine='${fault_machine}' and fault_structure='${fault_structure}' and fault_type='${fault_type}'")
+	public List<experts_database> selectBystnameAndmtype1(@Param(value="fault_machine")String fault_machine,@Param(value="fault_structure")String fault_structure,@Param(value="fault_type")String fault_type);
 
 }
