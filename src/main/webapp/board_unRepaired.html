@@ -220,7 +220,7 @@
 	});	
 	
 	
-	$("#cateCode_search").bsSuggest('init', {
+/* 	$("#cateCode_search").bsSuggest('init', {
 	    clearable: true,
 	    url: "./getdatatest.do",
 	    showBtn: false,
@@ -236,7 +236,7 @@
 	    console.log({message});   
 	    $('#myModal').modal('show');
 	    $('#fault_msg').html(cate_code_add);
-/* 		$.ajax({
+ 		$.ajax({
 			type: "post",
 			url: "./getSpecialPhoto.do",
 			data:{
@@ -259,11 +259,11 @@
 					document.getElementById('show_photo').innerHTML+=`<div><a href="./special/${json[i]['path']}" target="_blank">${json[i]['path']}</a></div>`
 				}
 			} 
-		}) */;
+		}) 
 	    
 	}).on("onUnsetSelectValue",function(e) {
 	    cate_code_add = '';
-	});
+	}); */
 		function lok_img(id) {
 			console.log();
 			var img_box = document.getElementById('img_box');
@@ -366,6 +366,8 @@
 						record=data;
 						var obj = eval(data);
 						for(var i = 0; i < obj.length; i++) {
+						let	machine_type=obj[i]["s_mType"];
+						let fault_msg=obj[i]["s_acType"];
 							document.getElementById('unRepairedTable').innerHTML += `
 									<tr id="label1">					
 									<td id="id${obj[i]["s_id"]}">${obj[i]["s_id"]}</td>
@@ -375,7 +377,7 @@
 									<td id="person${obj[i]["s_id"]}">${obj[i]["s_person"]}</td>
 									<td id="describe${obj[i]["s_id"]}">${obj[i]["s_describe"]}</td>
 									<td class="am-hide-sm-only" style="color: red;" id="status${obj[i]["s_id"]}">${obj[i]["s_status"]}</td>
-									<td class="am-hide-sm-only" id="acType${obj[i]["s_id"]}">${obj[i]["s_acType"]}</td>
+									<td class="am-hide-sm-only" id="acType${obj[i]["s_id"]}"><a href="#" onclick="getMsg('${machine_type}','${fault_msg}')">${obj[i]["s_acType"]}</a></td>
 									<td  id="sendTo${obj[i]["s_id"]}">${obj[i]["s_sendTo"]}</td>
 									<td>
 										<div class="am-btn-toolbar">
@@ -392,6 +394,30 @@
 				});
 			}
 		}
+		function getMsg(machine_type,fault_msg){
+			console.log(machine_type+" "+fault_msg);
+			$.ajax({
+				type:'post',
+				url:'./gethelp',
+				data:{
+					machine_type:machine_type,
+					fault_type:fault_msg
+				},
+				success: function (response) {
+				
+					let obj=eval(response);
+					console.log({obj});	
+					$('#myModal').modal('show');
+					let cate_code_add='';
+					for(let i=0;i<obj.length;i++){
+						cate_code_add+=`${i+1}-----机器类型：${obj[i]["fault_machine"]};故障部位：${obj[i]["fault_structure"]};故障类型：${obj[i]["fault_type"]}; 处理方案：${obj[i]["fault_msg"]};
+`
+					}
+					$('#fault_msg').html(cate_code_add);
+				}
+			})
+		}
+		
 /*  		function seeInformation(i) {
 			console.log(i.dataset.index);
 			$.ajax({
