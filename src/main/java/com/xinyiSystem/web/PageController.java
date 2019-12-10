@@ -548,6 +548,11 @@ public class PageController {
 			}
 			System.out.println(help.getMachine_type()+reStrings[0]+reStrings[1]);
 			List<experts_database> res=expertsDatabaseMapping.selectBystnameAndmtype1(help.getMachine_type(), reStrings[0], reStrings[1]);
+			for (int i = 0; i < res.size(); i++) {
+				if(res.get(i).getFault_msg()==null) {
+					res.get(i).setFault_msg("");
+				}
+			}
 			System.out.println(res.size());
 			return JSON.toJSONString(res);
 			

@@ -54,7 +54,7 @@
                 </div>
 
                         <div class="footer text-center">  
-                         <button class="btn btn-primary btn-round btn-lg btn-block" id="login1" onclick="login()" >登录</button>
+                         <button class="btn btn-primary btn-round btn-lg btn-block" id="login1" onclick="fn()" >登录</button>
                         </div>
                         
 
@@ -68,14 +68,14 @@
 	document.onkeydown=function(e){
 		var ev = document.all?window.event:e;
 		if(ev.keyCode==13){
- 			login(); 
+ 			fn(); 
 		}
 	}//原生js方法
 
 </script>
 
 <script>
-    window.onload = function(){
+    /* window.onload = function(){
         var oForm = document.getElementById('login1');
         var oUser = document.getElementById('name');
         var oPswd = document.getElementById('pass');
@@ -120,8 +120,31 @@
     //删除cookie
     function delCookie(name){
         setCookie(name,null,-1);
-    };
- 
+    }; */
+    
+  
+    var user = document.getElementById('name'),
+    pass = document.getElementById('pass'),
+    check = document.getElementById('remember'),
+    loUser = localStorage.getItem("user") || "";
+    loPass = localStorage.getItem("pass") || "";
+	user.value = loUser;
+	pass.value = loPass;
+	if(loUser !== "" && loPass !== ""){
+    check.setAttribute("checked","");
+	}
+	
+	function fn(){
+	if(check.checked){
+    localStorage.setItem("user",user.value);
+    localStorage.setItem("pass",pass.value);
+    login();
+	}else{
+    localStorage.setItem("user","");
+    localStorage.setItem("pass","");
+    login();
+	}
+}
 </script>
 
 
