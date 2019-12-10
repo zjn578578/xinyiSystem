@@ -103,7 +103,7 @@ function review() {
 		if(s_mId=="机台ID"){
 			s_mId="";
 		}
-		if(s_acType=='其他'||s_acType1=='其他'&&s_describe==''){
+		if(s_acType=='其他'&&s_acType1=='其他'&&s_describe==''){
 			alert("请填写故障描述");
 			return;
 		}

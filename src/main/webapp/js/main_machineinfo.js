@@ -248,3 +248,7 @@ function createsum ( ) {
 	let sum=pre+""+year+""+month+""+day;
 	return sum;
   }
+
+function shuaxin() {
+	location.reload();
+};
