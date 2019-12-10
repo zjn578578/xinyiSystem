@@ -365,6 +365,13 @@
 					success: function(data, Status) {
 						record=data;
 						var obj = eval(data);
+						
+						obj.sort((a,b)=>{
+							let oDate1 = new Date(a.s_date);
+					        let oDate2 = new Date(b.s_date);
+					        return oDate2-oDate1;
+						})
+						
 						for(var i = 0; i < obj.length; i++) {
 						let	machine_type=obj[i]["s_mType"];
 						let fault_msg=obj[i]["s_acType"];
